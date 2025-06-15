@@ -1,7 +1,9 @@
 import type { TextlintRuleModule } from "@textlint/types";
+import { matchPatterns } from "@textlint/regexp-string-matcher";
 
 export interface Options {
-    // If node's text includes allowed text, does not report.
+    // If node's text includes allowed patterns, does not report.
+    // Can be string or RegExp-like string ("/pattern/flags")
     allows?: string[];
     // Disable specific pattern checks
     disableBoldListItems?: boolean;
@@ -42,8 +44,12 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
         [Syntax.ListItem](node) {
             const text = getSource(node);
 
-            if (allows.some((allow) => text.includes(allow))) {
-                return;
+            // Check if text matches any allowed patterns
+            if (allows.length > 0) {
+                const matches = matchPatterns(text, allows);
+                if (matches.length > 0) {
+                    return;
+                }
             }
 
             // Check for bold list item pattern: - **text**: description

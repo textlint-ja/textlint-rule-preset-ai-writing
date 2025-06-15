@@ -8,11 +8,18 @@ tester.run("no-ai-formal-expressions", noAiFormalExpressions, {
         // Normal text
         "これは通常の文章です。",
         "問題のない表現を使用しています。",
-        // Allowed patterns
+        // Allowed patterns (string)
         {
             text: "以下のような形で進めます。",
             options: {
                 allows: ["以下のような形で"]
+            }
+        },
+        // Allowed patterns (RegExp-like string)
+        {
+            text: "次のような点について説明します。",
+            options: {
+                allows: ["/次のような.*/"]
             }
         }
     ],

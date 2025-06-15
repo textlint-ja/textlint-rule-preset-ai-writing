@@ -10,11 +10,25 @@ tester.run("no-ai-list-formatting", noAiListFormatting, {
         "- これは問題ない記述です",
         // Bold text not in list format
         "**強調テキスト**は問題ありません",
-        // Allowed patterns
+        // Allowed patterns (string)
         {
             text: "- **許可された**: 説明",
             options: {
                 allows: ["許可された"]
+            }
+        },
+        // Allowed patterns (RegExp-like string)
+        {
+            text: "- **重要事項**: これは重要な説明です",
+            options: {
+                allows: ["/重要.*/"]
+            }
+        },
+        // Allowed patterns (case insensitive)
+        {
+            text: "- **IMPORTANT**: This is important",
+            options: {
+                allows: ["/important/i"]
             }
         },
         // Disabled bold list items

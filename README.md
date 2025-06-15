@@ -83,12 +83,12 @@ Via `.textlintrc`(Recommended)
     "rules": {
         "preset-ai-writing": {
             "no-ai-list-formatting": {
-                "allows": ["許可したいテキスト"],
+                "allows": ["許可したいテキスト", "/正規表現パターン/i"],
                 "disableBoldListItems": false,
                 "disableEmojiListItems": false
             },
             "no-ai-formal-expressions": {
-                "allows": ["許可したいテキスト"]
+                "allows": ["許可したいテキスト", "/正規表現パターン/"]
             }
         }
     }
@@ -98,12 +98,44 @@ Via `.textlintrc`(Recommended)
 ### Options説明
 
 #### no-ai-list-formatting
-- `allows`: 指定したテキストを含む場合、エラーを報告しません
+- `allows`: 指定したパターンにマッチする場合、エラーを報告しません
+  - 文字列: `"許可したいテキスト"`
+  - 正規表現: `"/パターン/フラグ"` (例: `"/重要.*/i"`)
 - `disableBoldListItems`: `true`にすると強調リストアイテムの検出を無効にします
 - `disableEmojiListItems`: `true`にすると絵文字リストアイテムの検出を無効にします
 
 #### no-ai-formal-expressions
-- `allows`: 指定したテキストを含む場合、エラーを報告しません
+- `allows`: 指定したパターンにマッチする場合、エラーを報告しません
+  - 文字列: `"許可したいテキスト"`
+  - 正規表現: `"/パターン/フラグ"` (例: `"/以下のような.*/"`)
+
+### 正規表現パターンの使用例
+
+`allows`オプションでは、[regexp-string-matcher](https://github.com/textlint/regexp-string-matcher)の形式で正規表現パターンを指定できます。
+
+#### 基本的な使い方
+```json
+{
+    "allows": [
+        "特定の文字列",           // 完全一致
+        "/パターン/",            // 正規表現（基本）
+        "/パターン/i",           // 大文字小文字を無視
+        "/パターン/m"            // 複数行マッチ
+    ]
+}
+```
+
+#### 実用例
+```json
+{
+    "allows": [
+        "/重要.*/",              // 「重要」で始まる任意の文字列
+        "/\\*\\*注意\\*\\*/",   // **注意** (特殊文字をエスケープ)
+        "/TODO.*/i",             // TODO で始まる文字列（大文字小文字無視）
+        "/\\d{4}-\\d{2}-\\d{2}/" // 日付形式 (YYYY-MM-DD)
+    ]
+}
+```
 
 Via CLI
 

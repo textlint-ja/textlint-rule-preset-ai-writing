@@ -4,7 +4,7 @@
   "description": "textlintプリセット：AIっぽい記述パターンを検出し、より自然な日本語表現を促すルール集",
   "keywords": [
     "textlintrule",
-    "textlint-rule-preset", 
+    "textlint-rule-preset",
     "japanese",
     "ai-writing",
     "natural-writing",
@@ -62,5 +62,8 @@
   "packageManager": "yarn@1.22.21",
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "@textlint/regexp-string-matcher": "^2.0.2"
   }
 }
