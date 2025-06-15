@@ -1,24 +1,26 @@
 {
-  "name": "@textlint-ja/textlint-rule-no-ai-writing",
+  "name": "textlint-rule-preset-ai-writing",
   "version": "1.0.0",
-  "description": "textlintルール：AIっぽい記述パターンを検出し、より自然な日本語表現を促すルール",
+  "description": "textlintプリセット：AIっぽい記述パターンを検出し、より自然な日本語表現を促すルール集",
   "keywords": [
     "textlintrule",
+    "textlint-rule-preset", 
     "japanese",
     "ai-writing",
-    "natural-writing"
+    "natural-writing",
+    "preset"
   ],
-  "homepage": "https://github.com/textlint-ja/textlint-rule-no-ai-writing",
+  "homepage": "https://github.com/textlint-ja/textlint-rule-preset-ai-writing",
   "bugs": {
-    "url": "https://github.com/textlint-ja/textlint-rule-no-ai-writing/issues"
+    "url": "https://github.com/textlint-ja/textlint-rule-preset-ai-writing/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/textlint-ja/textlint-rule-no-ai-writing.git"
+    "url": "https://github.com/textlint-ja/textlint-rule-preset-ai-writing.git"
   },
   "license": "MIT",
   "author": "azu",
-  "main": "lib/textlint-rule-no-ai-writing.js",
+  "main": "lib/index.js",
   "directories": {
     "lib": "lib",
     "test": "test"
