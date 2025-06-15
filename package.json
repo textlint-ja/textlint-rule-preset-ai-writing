@@ -1,0 +1,64 @@
+{
+  "name": "@textlint-ja/textlint-rule-no-ai-writing",
+  "version": "1.0.0",
+  "description": "textlintルール：AIっぽい記述パターンを検出し、より自然な日本語表現を促すルール",
+  "keywords": [
+    "textlintrule",
+    "japanese",
+    "ai-writing",
+    "natural-writing"
+  ],
+  "homepage": "https://github.com/textlint-ja/textlint-rule-no-ai-writing",
+  "bugs": {
+    "url": "https://github.com/textlint-ja/textlint-rule-no-ai-writing/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/textlint-ja/textlint-rule-no-ai-writing.git"
+  },
+  "license": "MIT",
+  "author": "azu",
+  "main": "lib/textlint-rule-no-ai-writing.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "files": [
+    "bin/",
+    "lib/",
+    "src/"
+  ],
+  "scripts": {
+    "build": "textlint-scripts build",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,css}\"",
+    "prepare": "git config --local core.hooksPath .githooks",
+    "prepublishOnly": "npm run build",
+    "test": "textlint-scripts test",
+    "watch": "textlint-scripts build --watch"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,css}": [
+      "prettier --write"
+    ]
+  },
+  "prettier": {
+    "singleQuote": false,
+    "printWidth": 120,
+    "tabWidth": 4,
+    "trailingComma": "none"
+  },
+  "devDependencies": {
+    "@textlint/types": "^14.8.4",
+    "@types/node": "^24.0.1",
+    "lint-staged": "^16.1.2",
+    "prettier": "^3.5.3",
+    "textlint-scripts": "^14.8.4",
+    "textlint-tester": "^14.8.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  },
+  "packageManager": "yarn@1.22.21",
+  "publishConfig": {
+    "access": "public"
+  }
+}
