@@ -90,8 +90,7 @@ AIと人間の協力により、お互いの強みを活かした自然で読み
 
 テストはUnit Testのみで確認を行う
 
-- `textlint-tester`を使用して、ルールのテストを行う
-- 実際にファイルを作成して、`textlint`コマンドを使ったテストは行わない
+- `textlint-tester`を使用して、ルールのテストを実装する
 
 テストの実行方法
 
@@ -103,4 +102,17 @@ npm run test
 
 ```bash
 npm run test -- --grep no-repetitive-expressions
+```
+
+実際に `textlint` コマンドを使ってルールを適用する場合は、以下のように実行します。
+
+```bash
+mkdir tmp/
+npm install --save-dev . textlint technological-book-corpus-ja --prefix tmp/
+cd tmp
+# --rule でルール名を指定する
+./node_modules/.bin/technological-book-corpus-ja | xargs ./node_modules/.bin/textlint --preset  ai-writing -f pretty-error --no-textlintrc
+# 特定のファイルを作成してテストする
+echo "これは機械的な表現です。" > test.md
+./node_modules/.bin/textlint --preset ai-writing test.md
 ```
