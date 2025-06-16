@@ -63,6 +63,11 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
             pattern: /最先端の/g,
             message:
                 "「最先端の」という表現は定型的である可能性があります。具体的な技術的特徴を説明することを検討してください。"
+        },
+        {
+            pattern: /大幅に/g,
+            message:
+                "「大幅に」という表現は誇張的である可能性があります。具体的な数値や割合を示すことを検討してください。"
         }
     ];
 

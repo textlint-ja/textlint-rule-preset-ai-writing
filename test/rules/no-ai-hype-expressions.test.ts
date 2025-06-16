@@ -124,6 +124,16 @@ tester.run("no-ai-hype-expressions", noAiHypeExpressions, {
                 }
             ]
         },
+        {
+            text: "開発体験が大幅に向上します。",
+            errors: [
+                {
+                    message:
+                        "「大幅に」という表現は誇張的である可能性があります。具体的な数値や割合を示すことを検討してください。",
+                    range: [5, 8]
+                }
+            ]
+        },
         // 抽象的表現のハイプ
         {
             text: "魔法のように動作します。",
