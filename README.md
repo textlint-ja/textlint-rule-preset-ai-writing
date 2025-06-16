@@ -67,24 +67,7 @@ AIが機械的に使いがちな装飾的な絵文字の使用を検出します
 
 注意: 普通の絵文字（😀, 🍎, 🐱, 🌸など）は検出されません。
 
-### 2. no-ai-formal-expressions
-定型的で機械的な印象を与える可能性のある表現を検出します。
-
-検出される例:
-```markdown
-以下のような手順で進めます。
-次のような点に注意してください。
-具体的には以下の通りです。
-```
-
-書き換えた例:
-```markdown
-次の手順で進めます。
-以下の点に注意してください。
-具体的には次のとおりです。
-```
-
-### 3. no-ai-hype-expressions
+### 2. no-ai-hype-expressions
 AIライティングで過度に使用されがちな誇張表現やハイプ的な表現を検出します。自然で読みやすい文章を促進するためのルールです。
 
 #### 3-1. 絶対性・完全性を演出する表現
@@ -182,9 +165,6 @@ Via `.textlintrc`(Recommended)
                 "disableBoldListItems": false,
                 "disableEmojiListItems": false
             },
-            "no-ai-formal-expressions": {
-                "allows": ["許可したいテキスト", "/正規表現パターン/"]
-            },
             "no-ai-hype-expressions": {
                 "allows": ["許可したいテキスト", "/正規表現パターン/"],
                 "disableAbsolutenessPatterns": false,
@@ -204,11 +184,6 @@ Via `.textlintrc`(Recommended)
   - 正規表現: `"/パターン/フラグ"` (例: `"/重要.*/i"`)
 - `disableBoldListItems`: `true`にすると強調リストアイテムの検出を無効にする
 - `disableEmojiListItems`: `true`にすると絵文字リストアイテムの検出を無効にする
-
-#### no-ai-formal-expressions
-- `allows`: 指定したパターンにマッチする場合、エラーを報告しません
-  - 文字列: `"許可したいテキスト"`
-  - 正規表現: `"/パターン/フラグ"` (例: `"/以下のような.*/"`)
 
 ### 正規表現パターンの使用例
 
