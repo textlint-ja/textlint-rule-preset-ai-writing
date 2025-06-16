@@ -88,20 +88,25 @@ AIと人間の協力により、お互いの強みを活かした自然で読み
 
 ## テスト
 
-テストはUnit Testのみで確認を行う
+完全なテストは次のように行います。
+README.mdのチェックをtextlintで行い、ルールのテストは`textlint-tester`を使用します。
 
-- `textlint-tester`を使用して、ルールのテストを実装する
+```
+npm test
+```
 
-テストの実行方法
+ルールのテストは`textlint-tester`を使用して、ルールのテストを実装する
+
+Unit Testの実行方法
 
 ```bash
-npm run test
+npm run test:unit
 ```
 
 特定のルールのみをテストする場合は、以下のように実行します。
 
 ```bash
-npm run test -- --grep no-repetitive-expressions
+npm run test:unit -- --grep no-repetitive-expressions
 ```
 
 実際に `textlint` コマンドを使ってルールを適用する場合は、以下のように実行します。

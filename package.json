@@ -35,7 +35,9 @@
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,css}\"",
     "prepare": "git config --local core.hooksPath .githooks",
     "prepublishOnly": "npm run build",
-    "test": "textlint-scripts test",
+    "test": "npm run test:unit && npm run lint:text",
+    "lint:text": "textlint README.md",
+    "test:unit": "textlint-scripts test",
     "watch": "textlint-scripts build --watch"
   },
   "lint-staged": {
@@ -54,6 +56,8 @@
     "@types/node": "^24.0.1",
     "lint-staged": "^16.1.2",
     "prettier": "^3.5.3",
+    "textlint": "^14.8.4",
+    "textlint-rule-preset-ja-technical-writing": "^12.0.2",
     "textlint-scripts": "^14.8.4",
     "textlint-tester": "^14.8.4",
     "ts-node": "^10.9.2",
