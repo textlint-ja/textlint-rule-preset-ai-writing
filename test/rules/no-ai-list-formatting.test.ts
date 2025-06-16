@@ -44,7 +44,19 @@ tester.run("no-ai-list-formatting", noAiListFormatting, {
             options: {
                 disableEmojiListItems: true
             }
-        }
+        },
+        // Non-flashy emojis that should NOT be detected
+        "- 😀 普通の笑顔",
+        "- 🍎 りんご",
+        "- 🐱 猫",
+        "- 🌸 桜",
+        "- ❤️ ハート",
+        // Non-flashy emojis that should NOT be detected
+        "- 😀 普通の笑顔",
+        "- 🍎 りんご",
+        "- 🐱 猫",
+        "- 🌸 桜",
+        "- ❤️ ハート"
     ],
     invalid: [
         // Bold list item pattern
@@ -120,6 +132,47 @@ tester.run("no-ai-list-formatting", noAiListFormatting, {
                     message:
                         "リストアイテムでの絵文字「🔥」の使用は、読み手によっては機械的な印象を与える場合があります。テキストベースの表現も検討してみてください。",
                     range: [18, 20]
+                }
+            ]
+        },
+        // Additional flashy emoji tests
+        {
+            text: "- 🚀 ロケット項目",
+            errors: [
+                {
+                    message:
+                        "リストアイテムでの絵文字「🚀」の使用は、読み手によっては機械的な印象を与える場合があります。テキストベースの表現も検討してみてください。",
+                    range: [2, 4]
+                }
+            ]
+        },
+        {
+            text: "- ⭐ 星印項目",
+            errors: [
+                {
+                    message:
+                        "リストアイテムでの絵文字「⭐」の使用は、読み手によっては機械的な印象を与える場合があります。テキストベースの表現も検討してみてください。",
+                    range: [2, 3]
+                }
+            ]
+        },
+        {
+            text: "- 🎯 ターゲット項目",
+            errors: [
+                {
+                    message:
+                        "リストアイテムでの絵文字「🎯」の使用は、読み手によっては機械的な印象を与える場合があります。テキストベースの表現も検討してみてください。",
+                    range: [2, 4]
+                }
+            ]
+        },
+        {
+            text: "- 📝 メモ項目",
+            errors: [
+                {
+                    message:
+                        "リストアイテムでの絵文字「📝」の使用は、読み手によっては機械的な印象を与える場合があります。テキストベースの表現も検討してみてください。",
+                    range: [2, 4]
                 }
             ]
         }

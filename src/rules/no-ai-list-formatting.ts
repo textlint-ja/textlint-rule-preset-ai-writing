@@ -16,29 +16,54 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
     const disableBoldListItems = options.disableBoldListItems ?? false;
     const disableEmojiListItems = options.disableEmojiListItems ?? false;
 
-    // AI-like emoji patterns commonly used in lists
-    const emojiPatterns = [
+    // Pattern to detect "flashy" emojis commonly used in AI-generated content
+    // Using explicit list of decorative emojis that give mechanical impression
+    const flashyEmojis = [
+        // Check marks and status indicators
         "✅",
         "❌",
         "⭐",
-        "💡",
-        "🔥",
-        "📝",
-        "⚡",
-        "🎯",
-        "🚀",
-        "🎉",
-        "📌",
-        "🔍",
-        "💰",
-        "📊",
-        "🔧",
+        "✨",
+        "💯",
+        // Warning and attention symbols
         "⚠️",
         "❗",
-        "💻",
-        "📱",
-        "🌟"
+        "❓",
+        "💥",
+        // Energy and fire symbols
+        "🔥",
+        "⚡",
+        "💪",
+        "🚀",
+        // Ideas and thinking
+        "💡",
+        "🤔",
+        "💭",
+        "🧠",
+        // Targets and goals
+        "🎯",
+        "📈",
+        "📊",
+        "🏆",
+        // Common decorative symbols
+        "👍",
+        "👎",
+        "😊",
+        "😎",
+        "🎉",
+        "🌟",
+        // Work and productivity
+        "📝",
+        "📋",
+        "✏️",
+        "🖊️",
+        "💼"
     ];
+
+    // Create pattern from explicit emoji list
+    // Need to escape special regex characters
+    const escapedEmojis = flashyEmojis.map((emoji) => emoji.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+    const flashyEmojiPattern = new RegExp(`(${escapedEmojis.join("|")})`);
 
     return {
         [Syntax.ListItem](node) {
@@ -72,19 +97,18 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
 
             // Check for emoji list items
             if (!disableEmojiListItems) {
-                for (const emoji of emojiPatterns) {
-                    const emojiIndex = text.indexOf(emoji);
-                    if (emojiIndex !== -1) {
-                        const matchRange = [emojiIndex, emojiIndex + emoji.length] as const;
-                        const ruleError = new RuleError(
-                            `リストアイテムでの絵文字「${emoji}」の使用は、読み手によっては機械的な印象を与える場合があります。テキストベースの表現も検討してみてください。`,
-                            {
-                                padding: locator.range(matchRange)
-                            }
-                        );
-                        report(node, ruleError);
-                        break; // Only report the first emoji found in each list item
-                    }
+                const emojiMatch = text.match(flashyEmojiPattern);
+                if (emojiMatch) {
+                    const emoji = emojiMatch[0];
+                    const emojiIndex = emojiMatch.index ?? 0;
+                    const matchRange = [emojiIndex, emojiIndex + emoji.length] as const;
+                    const ruleError = new RuleError(
+                        `リストアイテムでの絵文字「${emoji}」の使用は、読み手によっては機械的な印象を与える場合があります。テキストベースの表現も検討してみてください。`,
+                        {
+                            padding: locator.range(matchRange)
+                        }
+                    );
+                    report(node, ruleError);
                 }
             }
         }
