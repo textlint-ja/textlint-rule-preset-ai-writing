@@ -92,3 +92,15 @@ AIと人間の協力により、お互いの強みを活かした自然で読み
 
 - `textlint-tester`を使用して、ルールのテストを行う
 - 実際にファイルを作成して、`textlint`コマンドを使ったテストは行わない
+
+テストの実行方法
+
+```bash
+npm run test
+```
+
+特定のルールのみをテストする場合は、以下のように実行します。
+
+```bash
+npm run test -- --grep no-repetitive-expressions
+```
