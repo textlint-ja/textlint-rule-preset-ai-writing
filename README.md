@@ -16,8 +16,8 @@ AIが生成した文章によく見られる記述パターンを検出し、よ
 - `allows`: 指定したパターンにマッチする場合、エラーを報告しません
   - 文字列: `"許可したいテキスト"`
   - 正規表現: `"/パターン/フラグ"` (例: `"/革命的な.*/"`)
-- `disableAbsolutenessPatterns`: `true`にすると絶対性・完全性を演出する表現の検出を無効にします
-- `disableAbstractPatterns`: `true`にすると抽象的・感覚的効果を演出する表現の検出を無効にします
+- `disableAbsolutenessPatterns`: `true`にすると絶対性・完全性を演出する表現の検出を無効にする
+- `disableAbstractPatterns`: `true`にすると抽象的・感覚的効果を演出する表現の検出を無効にする
 - `disabledPredictivePatterns`: `true`にすると権威的・予言的な表現の検出を無効にしますパターン
 
 🔍 **検出される例:**
@@ -198,8 +198,8 @@ Via `.textlintrc`(Recommended)
 - `allows`: 指定したパターンにマッチする場合、エラーを報告しません
   - 文字列: `"許可したいテキスト"`
   - 正規表現: `"/パターン/フラグ"` (例: `"/重要.*/i"`)
-- `disableBoldListItems`: `true`にすると強調リストアイテムの検出を無効にします
-- `disableEmojiListItems`: `true`にすると絵文字リストアイテムの検出を無効にします
+- `disableBoldListItems`: `true`にすると強調リストアイテムの検出を無効にする
+- `disableEmojiListItems`: `true`にすると絵文字リストアイテムの検出を無効にする
 
 #### no-ai-formal-expressions
 - `allows`: 指定したパターンにマッチする場合、エラーを報告しません
@@ -257,7 +257,7 @@ Pull requests and stars are always welcome.
 
 For bugs and feature requests, [please create an issue](https://github.com/textlint-ja/textlint-rule-no-ai-writing/issues).
 
-1. Fork it!
+1. Fork it
 2. Create your feature branch: `git checkout -b my-new-feature`
 3. Commit your changes: `git commit -am 'Add some feature'`
 4. Push to the branch: `git push origin my-new-feature`
