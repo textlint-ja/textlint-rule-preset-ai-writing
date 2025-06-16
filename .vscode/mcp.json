@@ -1,0 +1,12 @@
+{
+    "servers": {
+        "textlint": {
+            "type": "stdio",
+            "command": "npx",
+            "args": [
+                "textlint",
+                "--mcp"
+            ]
+        }
+    }
+}
