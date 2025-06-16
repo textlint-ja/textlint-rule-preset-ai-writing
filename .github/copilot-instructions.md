@@ -120,4 +120,6 @@ cd tmp
 # 特定のファイルを作成してテストする
 echo "これは機械的な表現です。" > test.md
 ./node_modules/.bin/textlint --preset ai-writing test.md
+# README.mdのチェックを行う
+./node_modules/.bin/textlint --preset ai-writing ../README.md
 ```
