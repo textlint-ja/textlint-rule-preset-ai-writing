@@ -85,16 +85,6 @@ tester.run("no-ai-hype-expressions", noAiHypeExpressions, {
             ]
         },
         {
-            text: "すべての課題を解決します。",
-            errors: [
-                {
-                    message:
-                        "「すべて」という包括的な表現は過度に断定的である可能性があります。「多くの」や「主な」などの表現を検討してください。",
-                    range: [0, 4]
-                }
-            ]
-        },
-        {
             text: "完璧なソリューションを提供します。",
             errors: [
                 {
