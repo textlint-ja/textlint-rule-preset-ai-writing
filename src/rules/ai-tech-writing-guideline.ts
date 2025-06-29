@@ -24,7 +24,7 @@ export interface Options {
 }
 
 const rule: TextlintRuleModule<Options> = (context, options = {}) => {
-    const { Syntax, report, locator } = context;
+    const { Syntax, report, locator, RuleError } = context;
     const allows = options.allows ?? [];
     const disableRedundancyGuidance = options.disableRedundancyGuidance ?? false;
     const disableVoiceGuidance = options.disableVoiceGuidance ?? false;
@@ -233,10 +233,12 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
                         documentQualityMetrics[category as keyof typeof documentQualityMetrics]++;
                         hasDocumentIssues = true;
 
-                        report(node, {
-                            message: message,
-                            padding: locator.range(originalRange)
-                        });
+                        report(
+                            node,
+                            new RuleError(message, {
+                                padding: locator.range(originalRange)
+                            })
+                        );
                     }
                 }
             }
@@ -266,9 +268,12 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
 
                 const detailsText = categoryDetails.length > 0 ? ` [内訳: ${categoryDetails.join(", ")}]` : "";
 
-                report(node, {
-                    message: `【テクニカルライティング品質分析】この文書で${totalIssues}件の改善提案が見つかりました${detailsText}。効果的なテクニカルライティングの7つのC（Clear, Concise, Correct, Coherent, Concrete, Complete, Courteous）の原則に基づいて見直しを検討してください。詳細なガイドライン: https://github.com/textlint-ja/textlint-rule-preset-ai-writing/blob/main/docs/tech-writing-guidelines.md`
-                });
+                report(
+                    node,
+                    new RuleError(
+                        `【テクニカルライティング品質分析】この文書で${totalIssues}件の改善提案が見つかりました${detailsText}。効果的なテクニカルライティングの7つのC（Clear, Concise, Correct, Coherent, Concrete, Complete, Courteous）の原則に基づいて見直しを検討してください。詳細なガイドライン: https://github.com/textlint-ja/textlint-rule-preset-ai-writing/blob/main/docs/tech-writing-guidelines.md`
+                    )
+                );
             }
         }
     };
