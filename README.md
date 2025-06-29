@@ -1,4 +1,4 @@
-# textlint-rule-preset-ai-writing
+# @textlint-ja/textlint-rule-preset-ai-writing
 
 AIが生成した文章によく見られる記述パターンを検出します。
 より自然な日本語表現を促すtextlintルールプリセットです。
@@ -183,9 +183,9 @@ AIを利用しやすくするプラットフォームです。
 
 ## Install
 
-Install with [npm](https://www.npmjs.com/package/textlint-rule-preset-ai-writing):
+Install with [npm](https://www.npmjs.com/package/@textlint-ja/textlint-rule-preset-ai-writing):
 
-    npm install textlint-rule-preset-ai-writing
+    npm install @textlint-ja/textlint-rule-preset-ai-writing
 
 ## Requirements
 
