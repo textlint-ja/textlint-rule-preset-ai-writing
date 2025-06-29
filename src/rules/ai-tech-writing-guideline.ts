@@ -177,6 +177,7 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
     ];
 
     // 文書全体の品質評価指標
+    let hasDocumentIssues = false;
     const documentQualityMetrics = {
         redundancy: 0,
         voice: 0,
@@ -186,21 +187,17 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
     };
 
     return {
-        [Syntax.Document](node) {
-            // 文書全体の分析を実行（enableDocumentAnalysisがtrueの場合）
-            if (enableDocumentAnalysis) {
-                const source = new StringSource(node);
-                const totalIssues = analyzeDocumentQuality(source.toString());
-
-                if (totalIssues > 0) {
-                    report(node, {
-                        message: `【テクニカルライティング品質分析】この文書で${totalIssues}件の改善提案が見つかりました。効果的なテクニカルライティングの7つのC（Clear, Concise, Correct, Coherent, Concrete, Complete, Courteous）の原則に基づいて見直しを検討してください。詳細なガイドライン: https://github.com/textlint-ja/textlint-rule-preset-ai-writing/blob/main/docs/tech-writing-guidelines.md`
-                    });
-                }
-            }
-        },
         [Syntax.Paragraph](node) {
-            const source = new StringSource(node);
+            // StringSourceを使用してコードブロックを除外したテキストを取得
+            const source = new StringSource(node, {
+                replacer({ node, emptyValue }) {
+                    // コードブロック、インラインコードを除外
+                    if (node.type === "Code" || node.type === "InlineCode") {
+                        return emptyValue();
+                    }
+                    return undefined;
+                }
+            });
             const text = source.toString();
 
             // 許可パターンのチェック
@@ -224,44 +221,57 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
                 const matches = text.matchAll(pattern);
                 for (const match of matches) {
                     const index = match.index ?? 0;
-                    const originalPosition = source.originalIndexFromIndex(index);
-                    const originalEndPosition = source.originalIndexFromIndex(index + match[0].length);
 
-                    // カテゴリ別のメトリクスを更新
-                    documentQualityMetrics[category as keyof typeof documentQualityMetrics]++;
+                    // プレーンテキストの位置を元のノード内の位置に変換
+                    const originalIndex = source.originalIndexFromIndex(index);
+                    const originalEndIndex = source.originalIndexFromIndex(index + match[0].length);
 
-                    if (originalPosition !== undefined && originalEndPosition !== undefined) {
-                        const matchRange = [originalPosition, originalEndPosition] as const;
+                    if (originalIndex !== undefined && originalEndIndex !== undefined) {
+                        const originalRange = [originalIndex, originalEndIndex] as const;
+
+                        // カテゴリ別のメトリクスを更新
+                        documentQualityMetrics[category as keyof typeof documentQualityMetrics]++;
+                        hasDocumentIssues = true;
+
                         report(node, {
                             message: message,
-                            padding: locator.range(matchRange)
+                            padding: locator.range(originalRange)
                         });
                     }
                 }
             }
+        },
+        [Syntax.DocumentExit](node) {
+            // 文書全体の分析を実行（enableDocumentAnalysisがtrueの場合）
+            if (enableDocumentAnalysis && hasDocumentIssues) {
+                const totalIssues = Object.values(documentQualityMetrics).reduce((sum, count) => sum + count, 0);
+
+                // カテゴリ別の詳細な分析結果を含むメッセージを生成
+                const categoryDetails = [];
+                if (documentQualityMetrics.redundancy > 0) {
+                    categoryDetails.push(`簡潔性: ${documentQualityMetrics.redundancy}件`);
+                }
+                if (documentQualityMetrics.voice > 0) {
+                    categoryDetails.push(`明確性: ${documentQualityMetrics.voice}件`);
+                }
+                if (documentQualityMetrics.clarity > 0) {
+                    categoryDetails.push(`具体性: ${documentQualityMetrics.clarity}件`);
+                }
+                if (documentQualityMetrics.consistency > 0) {
+                    categoryDetails.push(`一貫性: ${documentQualityMetrics.consistency}件`);
+                }
+                if (documentQualityMetrics.structure > 0) {
+                    categoryDetails.push(`構造化: ${documentQualityMetrics.structure}件`);
+                }
+
+                const detailsText = categoryDetails.length > 0 ? ` [内訳: ${categoryDetails.join(", ")}]` : "";
+
+                report(node, {
+                    message: `【テクニカルライティング品質分析】この文書で${totalIssues}件の改善提案が見つかりました${detailsText}。効果的なテクニカルライティングの7つのC（Clear, Concise, Correct, Coherent, Concrete, Complete, Courteous）の原則に基づいて見直しを検討してください。詳細なガイドライン: https://github.com/textlint-ja/textlint-rule-preset-ai-writing/blob/main/docs/tech-writing-guidelines.md`
+                });
+            }
         }
     };
-
-    // 文書全体の品質分析関数
-    function analyzeDocumentQuality(text: string): number {
-        let totalIssues = 0;
-
-        // コードブロックを除外して分析するためのパターンリスト
-        const guidancePatterns = [
-            ...(disableRedundancyGuidance ? [] : redundancyGuidance),
-            ...(disableVoiceGuidance ? [] : voiceGuidance),
-            ...(disableClarityGuidance ? [] : clarityGuidance),
-            ...(disableConsistencyGuidance ? [] : consistencyGuidance),
-            ...(disableStructureGuidance ? [] : structureGuidance)
-        ];
-
-        for (const { pattern } of guidancePatterns) {
-            const matches = text.matchAll(pattern);
-            totalIssues += Array.from(matches).length;
-        }
-
-        return totalIssues;
-    }
 };
 
 export default rule;
