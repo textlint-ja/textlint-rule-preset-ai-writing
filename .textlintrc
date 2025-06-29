@@ -1,0 +1,9 @@
+{
+  "rules": {
+    "preset-ai-writing": {
+      "ai-tech-writing-guideline": {
+        "severity": "info"
+      }
+    }
+  }
+}

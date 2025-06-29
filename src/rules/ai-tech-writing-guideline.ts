@@ -1,5 +1,6 @@
 import type { TextlintRuleModule } from "@textlint/types";
 import { matchPatterns } from "@textlint/regexp-string-matcher";
+import { StringSource } from "textlint-util-to-string";
 
 /**
  * テクニカルライティングガイドラインに基づく文書品質改善ルール
@@ -23,7 +24,7 @@ export interface Options {
 }
 
 const rule: TextlintRuleModule<Options> = (context, options = {}) => {
-    const { Syntax, report, getSource, locator } = context;
+    const { Syntax, report, locator } = context;
     const allows = options.allows ?? [];
     const disableRedundancyGuidance = options.disableRedundancyGuidance ?? false;
     const disableVoiceGuidance = options.disableVoiceGuidance ?? false;
@@ -188,8 +189,8 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
         [Syntax.Document](node) {
             // 文書全体の分析を実行（enableDocumentAnalysisがtrueの場合）
             if (enableDocumentAnalysis) {
-                const documentText = getSource(node);
-                const totalIssues = analyzeDocumentQuality(documentText);
+                const source = new StringSource(node);
+                const totalIssues = analyzeDocumentQuality(source.toString());
 
                 if (totalIssues > 0) {
                     report(node, {
@@ -199,7 +200,8 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
             }
         },
         [Syntax.Paragraph](node) {
-            const text = getSource(node);
+            const source = new StringSource(node);
+            const text = source.toString();
 
             // 許可パターンのチェック
             if (allows.length > 0) {
@@ -222,15 +224,19 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
                 const matches = text.matchAll(pattern);
                 for (const match of matches) {
                     const index = match.index ?? 0;
-                    const matchRange = [index, index + match[0].length] as const;
+                    const originalPosition = source.originalIndexFromIndex(index);
+                    const originalEndPosition = source.originalIndexFromIndex(index + match[0].length);
 
                     // カテゴリ別のメトリクスを更新
                     documentQualityMetrics[category as keyof typeof documentQualityMetrics]++;
 
-                    report(node, {
-                        message: message,
-                        padding: locator.range(matchRange)
-                    });
+                    if (originalPosition !== undefined && originalEndPosition !== undefined) {
+                        const matchRange = [originalPosition, originalEndPosition] as const;
+                        report(node, {
+                            message: message,
+                            padding: locator.range(matchRange)
+                        });
+                    }
                 }
             }
         }
@@ -239,15 +245,17 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
     // 文書全体の品質分析関数
     function analyzeDocumentQuality(text: string): number {
         let totalIssues = 0;
-        const allPatterns = [
-            ...redundancyGuidance,
-            ...voiceGuidance,
-            ...clarityGuidance,
-            ...consistencyGuidance,
-            ...structureGuidance
+
+        // コードブロックを除外して分析するためのパターンリスト
+        const guidancePatterns = [
+            ...(disableRedundancyGuidance ? [] : redundancyGuidance),
+            ...(disableVoiceGuidance ? [] : voiceGuidance),
+            ...(disableClarityGuidance ? [] : clarityGuidance),
+            ...(disableConsistencyGuidance ? [] : consistencyGuidance),
+            ...(disableStructureGuidance ? [] : structureGuidance)
         ];
 
-        for (const { pattern } of allPatterns) {
+        for (const { pattern } of guidancePatterns) {
             const matches = text.matchAll(pattern);
             totalIssues += Array.from(matches).length;
         }

@@ -40,8 +40,17 @@ AIが機械的に生成しがちな強調パターンを検出します。
 テクニカルライティングのベストプラクティスに基づいて、文書品質の改善提案を行います。
 詳細なガイドラインについては [docs/tech-writing-guidelines.md](./docs/tech-writing-guidelines.md) を参照してください。
 
+#### 推奨する組み合わせ
+このルールは [textlint-rule-preset-ja-technical-writing](https://github.com/textlint-ja/textlint-rule-preset-ja-technical-writing) との組み合わせを推奨します。
+`ja-technical-writing` はfalse positiveが少ない確実なルールセットで、基本的な日本語技術文書の品質を担保します。
+本ルール（`ai-tech-writing-guideline`）は、より高度な文書品質向上のためのサジェストとして使用することを想定しています。
+
 #### 検出される内容
-- 簡潔性: 冗長表現の排除（「まず」→「まず」など）
+- 簡潔性: 冗長表現の排除
+  ```
+  まず最初に → まず
+  〜することができます → 〜します
+  ```
 - 明確性: 能動態の使用推奨（受動態から能動態への変更提案）
 - 具体性: 抽象的表現の具体化（「高速な」→「50ms未満の」など）
 - 一貫性: 用語と表現の統一（同一対象への異なる用語使用の検出）
@@ -189,6 +198,25 @@ Via `.textlintrc`(Recommended)
     }
 }
 ```
+
+### 推奨構成: ja-technical-writing との組み合わせ
+
+基本的な日本語技術文書の品質担保と、より高度な文書品質向上の組み合わせ:
+
+```json
+{
+    "rules": {
+        "preset-ja-technical-writing": true,
+        "preset-ai-writing": {
+            "ai-tech-writing-guideline": {
+                "severity": "info"
+            }
+        }
+    }
+}
+```
+
+この構成では、`ja-technical-writing` で確実な問題を修正し、`ai-tech-writing-guideline` でさらなる改善提案を受け取ることができます。
 
 ## Options
 
