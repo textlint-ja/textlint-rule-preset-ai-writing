@@ -35,8 +35,9 @@
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,css}\"",
     "prepare": "git config --local core.hooksPath .githooks",
     "prepublishOnly": "npm run build",
-    "test": "npm run test:unit && npm run lint:text",
+    "test": "npm run test:unit && npm run lint:text && npm run lint:README",
     "lint:text": "textlint README.md",
+    "lint:README": "bash lint-README.sh",
     "test:unit": "textlint-scripts test",
     "watch": "textlint-scripts build --watch"
   },

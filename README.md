@@ -1,6 +1,7 @@
 # textlint-rule-preset-ai-writing
 
-AIが生成した文章によく見られる記述パターンを検出し、より自然な日本語表現を促すtextlintルールプリセットです。
+AIが生成した文章によく見られる記述パターンを検出することができます。
+より自然な日本語表現を促すtextlintルールプリセットです。
 
 ## 原則
 
@@ -11,7 +12,24 @@ AIが生成した文章によく見られる記述パターンを検出し、よ
 ### 1. no-ai-list-formatting
 リストアイテムで機械的な印象を与える可能性のある記述パターンを検出します。
 
-#### 1-1. リストアイテムの強調表現
+### 2. no-ai-hype-expressions
+AIライティングで過度に使用されがちな誇張表現やハイプ的な表現を検出します。
+
+### 3. no-ai-emphasis-patterns
+AIが機械的に生成しがちな強調パターンを検出します。
+
+### 4. ai-tech-writing-guideline
+テクニカルライティングのベストプラクティスに基づいて、文書品質の改善提案を行います。
+詳細なガイドラインについては [docs/tech-writing-guidelines.md](./docs/tech-writing-guidelines.md) を参照してください。
+
+#### 検出される内容
+- 簡潔性: 冗長表現の排除（「まず」→「まず」など）
+- 明確性: 能動態の使用推奨（受動態から能動態への変更提案）
+- 具体性: 抽象的表現の具体化（「高速な」→「50ms未満の」など）
+- 一貫性: 用語と表現の統一（同一対象への異なる用語使用の検出）
+- 構造化: 文の長さと情報整理（長い文の分割提案など）
+
+#### 4-1. リストアイテムの強調表現
 - `allows`: 指定したパターンにマッチする場合、エラーを報告しません
   - 文字列: `"許可したいテキスト"`
   - 正規表現: `"/パターン/フラグ"` (例: `"/以下のような.*/"`)
@@ -30,9 +48,11 @@ AIが生成した文章によく見られる記述パターンを検出し、よ
 - **注意**: 注意が必要な項目です
 ```
 
-書き換えた例
+書き換えた例:
 ```markdown
 - 重要な項目: これは重要な項目です
+- 注意事項: 注意が必要な項目です
+```
 - 注意事項: 注意が必要な項目です
 ```
 
@@ -170,6 +190,15 @@ Via `.textlintrc`(Recommended)
                 "disableAbsolutenessPatterns": false,
                 "disableAbstractPatterns": false,
                 "disabledPredictivePatterns": false
+            },
+            "ai-tech-writing-guideline": {
+                "allows": ["許可したいテキスト", "/正規表現パターン/"],
+                "disableRedundancyGuidance": false,
+                "disableVoiceGuidance": false,
+                "disableClarityGuidance": false,
+                "disableConsistencyGuidance": false,
+                "disableStructureGuidance": false,
+                "enableDocumentAnalysis": true
             }
         }
     }
