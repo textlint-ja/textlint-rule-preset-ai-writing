@@ -187,6 +187,11 @@ Install with [npm](https://www.npmjs.com/package/textlint-rule-preset-ai-writing
 
     npm install textlint-rule-preset-ai-writing
 
+## Requirements
+
+- [textlint 15.1.0](https://github.com/textlint/textlint/releases/tag/v15.1.0)以降が必要です
+
+
 ## Usage
 
 Via `.textlintrc`(Recommended)
