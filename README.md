@@ -192,6 +192,7 @@ Via `.textlintrc`(Recommended)
                 "disabledPredictivePatterns": false
             },
             "ai-tech-writing-guideline": {
+                "severity": "info", // サジェストとして扱う
                 "allows": ["許可したいテキスト", "/正規表現パターン/"],
                 "disableRedundancyGuidance": false,
                 "disableVoiceGuidance": false,
