@@ -7,6 +7,30 @@ AIが生成した文章によく見られる記述パターンを検出します
 
 表現を縛るのではなく、構造を縛ることで、より自然な表現にすることを目的としています。
 
+
+## Install
+
+Install with [npm](https://www.npmjs.com/package/@textlint-ja/textlint-rule-preset-ai-writing):
+
+    npm install @textlint-ja/textlint-rule-preset-ai-writing
+
+## Requirements
+
+- [textlint 15.1.0](https://github.com/textlint/textlint/releases/tag/v15.1.0)以降が必要です
+
+
+## Usage
+
+Via `.textlintrc`(Recommended)
+
+```json
+{
+    "rules": {
+        "preset-ai-writing": true
+    }
+}
+```
+
 ## バージョニング方針
 
 このプリセットは次のバージョニングでアップデートします。
@@ -181,28 +205,6 @@ AIを利用しやすくするプラットフォームです。
 新しいソリューションです。
 ```
 
-## Install
-
-Install with [npm](https://www.npmjs.com/package/@textlint-ja/textlint-rule-preset-ai-writing):
-
-    npm install @textlint-ja/textlint-rule-preset-ai-writing
-
-## Requirements
-
-- [textlint 15.1.0](https://github.com/textlint/textlint/releases/tag/v15.1.0)以降が必要です
-
-
-## Usage
-
-Via `.textlintrc`(Recommended)
-
-```json
-{
-    "rules": {
-        "preset-ai-writing": true
-    }
-}
-```
 
 ### 推奨構成: ja-technical-writing との組み合わせ
 
