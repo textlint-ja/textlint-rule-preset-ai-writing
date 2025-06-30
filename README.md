@@ -24,7 +24,7 @@ Via `.textlintrc`(Recommended)
 ```json
 {
     "rules": {
-        "preset-ai-writing": true
+        "@textlint-ja/preset-ai-writing": true
     }
 }
 ```
