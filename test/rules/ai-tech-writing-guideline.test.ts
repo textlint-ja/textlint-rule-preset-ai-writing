@@ -17,6 +17,15 @@ tester.run("ai-tech-writing-guideline", rule, {
         {
             text: "システムがデータを検証します。エラーが発生した場合、ログファイルに記録されます。",
             options: { enableDocumentAnalysis: false }
+        },
+        // 自然な箇条書きの導入例
+        {
+            text: "Vueのリアクティビティシステムは確かに便利ですが、その仕組みの見えにくさが気になります。\nたとえば、次のような点が見えにくいと感じます。\n\n- refとreactiveの使い分けが最初は分からない。",
+            options: { enableDocumentAnalysis: false }
+        },
+        {
+            text: "JSXはJavaScriptの中でUIを記述するため、プログラマーにとって理解しやすいです。\nたとえば、JSXの次のような点がわかりやすいと思っています。\n\n- 条件分岐やループは通常のJavaScriptの記法",
+            options: { enableDocumentAnalysis: false }
         }
     ],
     invalid: [
@@ -102,6 +111,27 @@ tester.run("ai-tech-writing-guideline", rule, {
                 {
                     message:
                         "【明確性】受動態表現が検出されました。「システムが○○を実行する」のような能動態への変更を検討してください。"
+                }
+            ]
+        },
+        // 構造化の問題（コロンと箇条書きの組み合わせ）
+        {
+            text: "Vueのリアクティビティシステムは確かに便利ですが、その仕組みの見えにくさが気になります。例えば：\n\n- refとreactiveの使い分けが最初は分からない。",
+            options: { enableDocumentAnalysis: false },
+            errors: [
+                {
+                    message:
+                        "【構造化】コロン（：）で終わる文の直後の箇条書きは機械的な印象を与える可能性があります。「たとえば、次のような点があります。」のような導入文を使った自然な表現を検討してください。"
+                }
+            ]
+        },
+        {
+            text: "JSXはJavaScriptの中でUIを記述するため、プログラマーにとって理解しやすいです：\n\n- 条件分岐やループは通常のJavaScriptの記法",
+            options: { enableDocumentAnalysis: false },
+            errors: [
+                {
+                    message:
+                        "【構造化】コロン（：）で終わる文の直後の箇条書きは機械的な印象を与える可能性があります。「たとえば、次のような点があります。」のような導入文を使った自然な表現を検討してください。"
                 }
             ]
         },
