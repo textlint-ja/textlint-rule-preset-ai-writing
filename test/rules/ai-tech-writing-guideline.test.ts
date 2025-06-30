@@ -26,6 +26,19 @@ tester.run("ai-tech-writing-guideline", rule, {
         {
             text: "JSXはJavaScriptの中でUIを記述するため、プログラマーにとって理解しやすいです。\nたとえば、JSXの次のような点がわかりやすいと思っています。\n\n- 条件分岐やループは通常のJavaScriptの記法",
             options: { enableDocumentAnalysis: false }
+        },
+        // 自然な接続表現の例
+        {
+            text: "モダンフレームワークには多くの利点があります。たとえば、次のような点が挙げられます。\n\n- パフォーマンスの最適化\n- 開発効率の向上",
+            options: { enableDocumentAnalysis: false }
+        },
+        {
+            text: "データベース設計では重要な要素を考慮します。具体的には、以下の要素を検討します。\n\n- 正規化\n- インデックス設計",
+            options: { enableDocumentAnalysis: false }
+        },
+        {
+            text: "パフォーマンス改善の手法を紹介します。以下にその手法を示します。\n\n- コード最適化\n- キャッシュ活用",
+            options: { enableDocumentAnalysis: false }
         }
     ],
     invalid: [
@@ -132,6 +145,37 @@ tester.run("ai-tech-writing-guideline", rule, {
                 {
                     message:
                         "【構造化】コロン（：）で終わる文の直後の箇条書きは機械的な印象を与える可能性があります。「たとえば、次のような点があります。」のような導入文を使った自然な表現を検討してください。"
+                }
+            ]
+        },
+        // 構造化の問題（接続表現と句点の組み合わせ）
+        {
+            text: "モダンフレームワークには多くの利点があります。例えば。\n\n- パフォーマンスの最適化\n- 開発効率の向上",
+            options: { enableDocumentAnalysis: false },
+            errors: [
+                {
+                    message:
+                        "【構造化】接続表現と句点で終わる文の直後の箇条書きは機械的な印象を与える可能性があります。「たとえば、次のような点があります。」のような自然な導入文を検討してください。"
+                }
+            ]
+        },
+        {
+            text: "データベース設計では重要な要素を考慮します。具体的には。\n\n- 正規化\n- インデックス設計",
+            options: { enableDocumentAnalysis: false },
+            errors: [
+                {
+                    message:
+                        "【構造化】接続表現と句点で終わる文の直後の箇条書きは機械的な印象を与える可能性があります。「たとえば、次のような点があります。」のような自然な導入文を検討してください。"
+                }
+            ]
+        },
+        {
+            text: "パフォーマンス改善の手法を紹介します。以下。\n\n- コード最適化\n- キャッシュ活用",
+            options: { enableDocumentAnalysis: false },
+            errors: [
+                {
+                    message:
+                        "【構造化】接続表現と句点で終わる文の直後の箇条書きは機械的な印象を与える可能性があります。「たとえば、次のような点があります。」のような自然な導入文を検討してください。"
                 }
             ]
         },

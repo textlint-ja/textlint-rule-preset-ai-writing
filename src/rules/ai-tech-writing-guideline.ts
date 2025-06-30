@@ -187,9 +187,9 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
     };
 
     /**
-     * コロン（：）で終わる段落の直後に箇条書きが続くパターンを検出
+     * 機械的な段落と箇条書きの組み合わせパターンを検出
      */
-    const detectColonListPattern = (node: any) => {
+    const detectMechanicalListIntroPattern = (node: any) => {
         const children = node.children || [];
 
         for (let i = 0; i < children.length - 1; i++) {
@@ -209,8 +209,24 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
                 });
                 const paragraphText = paragraphSource.toString();
 
-                // 「：」で終わる段落の後にリストが続く場合を検出
+                // 機械的なパターンを検出
+                let isDetected = false;
+                let message = "";
+
+                // パターン1: コロン（：、:）で終わる段落
                 if (/[：:][\s]*$/.test(paragraphText.trim())) {
+                    isDetected = true;
+                    message =
+                        "【構造化】コロン（：）で終わる文の直後の箇条書きは機械的な印象を与える可能性があります。「たとえば、次のような点があります。」のような導入文を使った自然な表現を検討してください。";
+                }
+                // パターン2: 「例えば。」「具体的には。」など、接続表現+句点で終わる段落
+                else if (/(?:例えば|具体的には|詳細には|以下|次に|また)。[\s]*$/.test(paragraphText.trim())) {
+                    isDetected = true;
+                    message =
+                        "【構造化】接続表現と句点で終わる文の直後の箇条書きは機械的な印象を与える可能性があります。「たとえば、次のような点があります。」のような自然な導入文を検討してください。";
+                }
+
+                if (isDetected) {
                     // 許可パターンのチェック
                     if (allows.length > 0) {
                         const matches = matchPatterns(paragraphText, allows);
@@ -223,8 +239,7 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
                     hasDocumentIssues = true;
 
                     report(currentNode, {
-                        message:
-                            "【構造化】コロン（：）で終わる文の直後の箇条書きは機械的な印象を与える可能性があります。「たとえば、次のような点があります。」のような導入文を使った自然な表現を検討してください。"
+                        message: message
                     });
                 }
             }
@@ -240,7 +255,7 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
         }
 
         // コロン + 箇条書きパターンの検出
-        detectColonListPattern(node);
+        detectMechanicalListIntroPattern(node);
         // 将来的にここに他の文書レベルの構造化パターンを追加できます
         // 例：
         // detectExcessiveNestedLists(node);
