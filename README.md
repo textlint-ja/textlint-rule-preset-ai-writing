@@ -249,7 +249,7 @@ AIを利用しやすくするプラットフォームです。
 {
     "rules": {
         "preset-ja-technical-writing": true,
-        "preset-ai-writing": {
+        "@textlint-ja/preset-ai-writing": {
             "ai-tech-writing-guideline": {
                 "severity": "info"
             }
@@ -267,7 +267,7 @@ AIを利用しやすくするプラットフォームです。
 ```json
 {
     "rules": {
-        "preset-ai-writing": {
+        "@textlint-ja/preset-ai-writing": {
             "no-ai-list-formatting": {
                 "allows": ["許可したいテキスト", "/正規表現パターン/i"],
                 "disableBoldListItems": false,
