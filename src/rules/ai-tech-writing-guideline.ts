@@ -19,6 +19,8 @@ export interface Options {
     disableConsistencyGuidance?: boolean;
     disableClarityGuidance?: boolean;
     disableStructureGuidance?: boolean;
+    // Disable colon + list formatting checks (allows colon followed by bullet points)
+    "no-ai-colon-list-formatting"?: boolean;
     // Enable document-level analysis
     enableDocumentAnalysis?: boolean;
 }
@@ -31,6 +33,7 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
     const disableConsistencyGuidance = options.disableConsistencyGuidance ?? false;
     const disableClarityGuidance = options.disableClarityGuidance ?? false;
     const disableStructureGuidance = options.disableStructureGuidance ?? false;
+    const noAiColonListFormatting = options["no-ai-colon-list-formatting"] ?? false;
     const enableDocumentAnalysis = options.enableDocumentAnalysis ?? true;
 
     // テクニカルライティングガイダンスパターン
@@ -255,7 +258,9 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
         }
 
         // コロン + 箇条書きパターンの検出
-        detectMechanicalListIntroPattern(node);
+        if (!noAiColonListFormatting) {
+            detectMechanicalListIntroPattern(node);
+        }
         // 将来的にここに他の文書レベルの構造化パターンを追加できます
         // 例：
         // detectExcessiveNestedLists(node);

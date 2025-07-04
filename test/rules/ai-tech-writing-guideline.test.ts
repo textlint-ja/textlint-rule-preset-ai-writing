@@ -39,6 +39,15 @@ tester.run("ai-tech-writing-guideline", rule, {
         {
             text: "パフォーマンス改善の手法を紹介します。以下にその手法を示します。\n\n- コード最適化\n- キャッシュ活用",
             options: { enableDocumentAnalysis: false }
+        },
+        // no-ai-colon-list-formatting オプション true の場合（コロン+箇条書きを許可）
+        {
+            text: "フレームワークの特徴は以下の通りです：\n\n- 高速な処理\n- 簡単な設定",
+            options: { "no-ai-colon-list-formatting": true, enableDocumentAnalysis: false }
+        },
+        {
+            text: "設定項目について説明します。例えば。\n\n- 基本設定\n- 詳細設定",
+            options: { "no-ai-colon-list-formatting": true, enableDocumentAnalysis: false }
         }
     ],
     invalid: [
@@ -198,6 +207,37 @@ tester.run("ai-tech-writing-guideline", rule, {
                 {
                     message:
                         "【簡潔性】冗長な助動詞表現が検出されました。「できます」または「します」への簡潔化を検討してください。"
+                }
+            ]
+        },
+        // no-ai-colon-list-formatting オプション false の場合（デフォルト動作：エラーを検出）
+        {
+            text: "フレームワークの特徴は以下の通りです：\n\n- 高速な処理\n- 簡単な設定",
+            options: { "no-ai-colon-list-formatting": false, enableDocumentAnalysis: false },
+            errors: [
+                {
+                    message:
+                        "【構造化】コロン（：）で終わる文の直後の箇条書きは機械的な印象を与える可能性があります。「たとえば、次のような点があります。」のような導入文を使った自然な表現を検討してください。"
+                }
+            ]
+        },
+        {
+            text: "APIの使用方法について：\n\n- GET リクエスト\n- POST リクエスト",
+            options: { "no-ai-colon-list-formatting": false, enableDocumentAnalysis: false },
+            errors: [
+                {
+                    message:
+                        "【構造化】コロン（：）で終わる文の直後の箇条書きは機械的な印象を与える可能性があります。「たとえば、次のような点があります。」のような導入文を使った自然な表現を検討してください。"
+                }
+            ]
+        },
+        {
+            text: "設定項目について説明します。例えば。\n\n- 基本設定\n- 詳細設定",
+            options: { "no-ai-colon-list-formatting": false, enableDocumentAnalysis: false },
+            errors: [
+                {
+                    message:
+                        "【構造化】接続表現と句点で終わる文の直後の箇条書きは機械的な印象を与える可能性があります。「たとえば、次のような点があります。」のような自然な導入文を検討してください。"
                 }
             ]
         }
