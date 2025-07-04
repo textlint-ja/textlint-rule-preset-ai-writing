@@ -42,7 +42,7 @@ tester.run("ai-tech-writing-guideline", rule, {
         },
         // no-ai-colon-list-formatting オプション true の場合（コロン+箇条書きを許可）
         {
-            text: "フレームワークの特徴は以下の通りです：\n\n- 高速な処理\n- 簡単な設定",
+            text: "フレームワークの特徴は以下の通りです：\n\n- 便利な機能\n- 簡単な設定",
             options: { "no-ai-colon-list-formatting": true, enableDocumentAnalysis: false }
         },
         {
@@ -212,7 +212,7 @@ tester.run("ai-tech-writing-guideline", rule, {
         },
         // no-ai-colon-list-formatting オプション false の場合（デフォルト動作：エラーを検出）
         {
-            text: "フレームワークの特徴は以下の通りです：\n\n- 高速な処理\n- 簡単な設定",
+            text: "フレームワークの特徴は以下の通りです：\n\n- 便利な機能\n- 簡単な設定",
             options: { "no-ai-colon-list-formatting": false, enableDocumentAnalysis: false },
             errors: [
                 {
