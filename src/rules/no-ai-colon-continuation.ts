@@ -62,6 +62,10 @@ const rule = (context: any, options: any = {}) => {
             return;
         }
 
+        // コロンの種類を特定
+        const isFullWidthColon = plainText.endsWith("：");
+        const colonChar = isFullWidthColon ? "：" : ":";
+
         // コロンを除いたテキストを取得
         const beforeColonText = plainText.slice(0, -1);
 
@@ -138,16 +142,12 @@ const rule = (context: any, options: any = {}) => {
         })();
 
         if (shouldReport) {
-            // 半角・全角コロンの位置を検索
-            const halfWidthIndex = paragraphText.lastIndexOf(":");
-            const fullWidthIndex = paragraphText.lastIndexOf("：");
-            const colonIndex = Math.max(halfWidthIndex, fullWidthIndex);
-            const matchRange = [colonIndex, colonIndex + 1] as const;
+            // paragraphTextでのコロン位置を計算（StringSourceとの位置差を考慮）
+            const paragraphColonIndex = paragraphText.lastIndexOf(colonChar);
+            const matchRange = [paragraphColonIndex, paragraphColonIndex + 1] as const;
 
-            // メッセージに元のコロン文字を含める
-            const originalColon = fullWidthIndex > halfWidthIndex ? "：" : ":";
             const ruleError = new RuleError(
-                `「${beforeColonText}${originalColon}」のようなパターンは英語構文の直訳の可能性があります。より自然な日本語表現を検討してください。`,
+                `「${beforeColonText}${colonChar}」のようなパターンは英語構文の直訳の可能性があります。より自然な日本語表現を検討してください。`,
                 {
                     padding: locator.range(matchRange)
                 }
