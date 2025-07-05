@@ -116,6 +116,26 @@ tester.run("no-ai-colon-continuation", noAiColonContinuation, {
                         "「表示します:」のようなパターンは英語構文の直訳の可能性があります。より自然な日本語表現を検討してください。"
                 }
             ]
+        },
+
+        // 元々 ai-tech-writing-guideline にあったテストケースの移植
+        {
+            text: "例えば:\n\n- refとreactiveの使い分けが最初は分からない。",
+            errors: [
+                {
+                    message:
+                        "「例えば:」のようなパターンは英語構文の直訳の可能性があります。より自然な日本語表現を検討してください。"
+                }
+            ]
+        },
+        {
+            text: "JSXはJavaScriptの中でUIを記述するため、プログラマーにとって理解しやすいです：\n\n- 条件分岐やループは通常のJavaScriptの記法",
+            errors: [
+                {
+                    message:
+                        "「JSXはJavaScriptの中でUIを記述するため、プログラマーにとって理解しやすいです：」のようなパターンは英語構文の直訳の可能性があります。より自然な日本語表現を検討してください。"
+                }
+            ]
         }
     ]
 });

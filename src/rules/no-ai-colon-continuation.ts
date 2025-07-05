@@ -48,8 +48,8 @@ const rule = (context: any, options: any = {}) => {
             }
         }
 
-        // コロンで終わっているかチェック
-        if (!paragraphText.trim().endsWith(":")) {
+        // コロン（半角・全角）で終わっているかチェック
+        if (!/[：:]$/.test(paragraphText.trim())) {
             return;
         }
 
@@ -57,8 +57,8 @@ const rule = (context: any, options: any = {}) => {
         const stringSource = new StringSource(paragraphNode);
         const plainText = stringSource.toString().trim();
 
-        // プレーンテキストでもコロンで終わっているかチェック
-        if (!plainText.endsWith(":")) {
+        // プレーンテキストでもコロン（半角・全角）で終わっているかチェック
+        if (!/[：:]$/.test(plainText)) {
             return;
         }
 
@@ -101,7 +101,12 @@ const rule = (context: any, options: any = {}) => {
                     return false;
                 }
 
-                // その他の品詞（助詞、接続詞等）の場合は文脈による
+                // 接続詞の場合もエラーとする（「例えば:」等は機械的パターン）
+                if (partOfSpeech === "接続詞") {
+                    return false;
+                }
+
+                // その他の品詞（助詞等）の場合は文脈による
                 // より保守的にエラーとする
                 return false;
             } catch (error) {
@@ -133,11 +138,16 @@ const rule = (context: any, options: any = {}) => {
         })();
 
         if (shouldReport) {
-            const colonIndex = paragraphText.lastIndexOf(":");
+            // 半角・全角コロンの位置を検索
+            const halfWidthIndex = paragraphText.lastIndexOf(":");
+            const fullWidthIndex = paragraphText.lastIndexOf("：");
+            const colonIndex = Math.max(halfWidthIndex, fullWidthIndex);
             const matchRange = [colonIndex, colonIndex + 1] as const;
 
+            // メッセージに元のコロン文字を含める
+            const originalColon = fullWidthIndex > halfWidthIndex ? "：" : ":";
             const ruleError = new RuleError(
-                `「${beforeColonText}:」のようなパターンは英語構文の直訳の可能性があります。より自然な日本語表現を検討してください。`,
+                `「${beforeColonText}${originalColon}」のようなパターンは英語構文の直訳の可能性があります。より自然な日本語表現を検討してください。`,
                 {
                     padding: locator.range(matchRange)
                 }
