@@ -136,7 +136,7 @@ const rule = (context: any, options: any = {}) => {
             const matchRange = [paragraphColonIndex, paragraphColonIndex + 1] as const;
 
             const ruleError = new RuleError(
-                `「${beforeColonText}${colonChar}」のようなパターンは、読み手によっては英語の構文を直訳したような印象を与える場合があります。より自然な日本語表現を検討してください。`,
+                `「${beforeColonText}${colonChar}」のような述語でコロンで終わるパターンは、読み手によっては英語の構文を直訳したような印象を与える場合があります。「〜を説明します。」「次のように〜します。」のような自然な日本語表現を検討してください。`,
                 {
                     padding: locator.range(matchRange)
                 }
