@@ -82,6 +82,54 @@ AIライティングで過度に使用されがちな誇張表現やハイプ的
 
 AIが機械的に生成しがちな強調パターンを検出します。
 
+### no-ai-colon-continuation
+
+コロンの直後にブロック要素が続く英語的なパターンを検出します。日本語として自然な表現を促進するルールです。
+
+このルールは形態素解析（kuromojin）を使用して、コロンの前の文が述語（動詞・形容詞・助動詞）で終わっているかを判定します。「使用方法:」のような名詞で終わる表現は自然な日本語として許可され、「実行します:」のような述語で終わる表現のみを検出します。
+
+#### 検出される例
+
+````markdown
+実行します:
+
+```bash
+command
+```
+
+説明します:
+
+- 項目1
+- 項目2
+
+例えば:
+
+- 具体的な例
+````
+
+#### より自然な日本語表現
+
+````markdown
+実行方法は以下の通りです。
+
+```bash
+command
+```
+
+説明の内容は以下の通りです。
+
+- 項目1
+- 項目2
+
+たとえば、次のような例があります。
+
+- 具体的な例
+
+例:
+
+- 具体的な例
+````
+
 ### ai-tech-writing-guideline
 
 テクニカルライティングのベストプラクティスに基づいて、文書品質の改善提案を行います。
@@ -279,6 +327,13 @@ AIを利用しやすくするプラットフォームです。
                 "disableAbstractPatterns": false,
                 "disabledPredictivePatterns": false
             },
+            "no-ai-colon-continuation": {
+                "allows": ["許可したいテキスト", "/正規表現パターン/"],
+                "disableCodeBlock": false,
+                "disableList": false,
+                "disableQuote": false,
+                "disableTable": false
+            },
             "ai-tech-writing-guideline": {
                 "severity": "info", // サジェストとして扱う
                 "allows": ["許可したいテキスト", "/正規表現パターン/"],
@@ -303,6 +358,16 @@ AIを利用しやすくするプラットフォームです。
     - 正規表現: `"/パターン/フラグ"` (例: `"/重要.*/i"`)
 - `disableBoldListItems`: `true`にすると強調リストアイテムの検出を無効にする
 - `disableEmojiListItems`: `true`にすると絵文字リストアイテムの検出を無効にする
+
+#### no-ai-colon-continuation
+
+- `allows`: 指定したパターンにマッチする場合、エラーを報告しません
+    - 文字列: `"許可したいテキスト"`
+    - 正規表現: `"/パターン/フラグ"` (例: `"/使用方法.*/i"`)
+- `disableCodeBlock`: `true`にするとコロン後のコードブロック検出を無効にする
+- `disableList`: `true`にするとコロン後のリスト検出を無効にする
+- `disableQuote`: `true`にするとコロン後の引用検出を無効にする
+- `disableTable`: `true`にするとコロン後のテーブル検出を無効にする
 
 ### 正規表現パターンの使用例
 

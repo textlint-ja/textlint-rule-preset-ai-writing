@@ -7,8 +7,8 @@ import { tokenize } from "kuromojin";
  *
  * 目的：
  * AI生成文章でよく見られる英語構文の直訳パターンを検出します。
- * 例：「使用方法:」の直後にコードブロックや箇条書きが続く構文は、
- * 英語の "Usage:" を直訳したもので、日本語としては不自然な場合があります。
+ * ただし、「使用方法:」のような名詞で終わる表現は自然な日本語として許可されます。
+ * 問題となるのは「実行します:」のような述語で終わる表現です。
  *
  * より自然な日本語表現：
  * - 「使用方法は以下の通りです」
@@ -24,17 +24,6 @@ const rule = (context: any, options: any = {}) => {
     const disableTable = options.disableTable ?? false;
 
     // AST走査で隣接するノードの組み合わせをチェック
-
-    // 例外的な名詞表現（Intl.Segmenterで正しく判定できない特殊なケース）
-    const exceptionNounExpressions = [
-        // 複合名詞でセグメンテーションが難しいもの
-        "使用方法",
-        "実行方法",
-        "設定方法",
-        "操作方法",
-        "API仕様",
-        "システム仕様"
-    ];
 
     const checkColonContinuation = async (paragraphNode: any, nextNode: any) => {
         // Paragraphノードのテキストを取得
@@ -114,8 +103,8 @@ const rule = (context: any, options: any = {}) => {
                 // より保守的にエラーとする
                 return false;
             } catch (error) {
-                // 形態素解析でエラーが発生した場合は例外的な名詞表現のチェック
-                return exceptionNounExpressions.some((expr) => beforeColonText === expr);
+                // 形態素解析でエラーが発生した場合は許可（保守的にエラーを避ける）
+                return true;
             }
         })();
 
@@ -147,7 +136,7 @@ const rule = (context: any, options: any = {}) => {
             const matchRange = [paragraphColonIndex, paragraphColonIndex + 1] as const;
 
             const ruleError = new RuleError(
-                `「${beforeColonText}${colonChar}」のようなパターンは英語構文の直訳の可能性があります。より自然な日本語表現を検討してください。`,
+                `「${beforeColonText}${colonChar}」のようなパターンは、読み手によっては英語の構文を直訳したような印象を与える場合があります。より自然な日本語表現を検討してください。`,
                 {
                     padding: locator.range(matchRange)
                 }
@@ -159,8 +148,7 @@ const rule = (context: any, options: any = {}) => {
     return {
         async [Syntax.Document](node: any) {
             // ドキュメントの子ノードを順番にチェック
-            for (let i = 0; i < node.children.length - 1; i++) {
-                const currentNode = node.children[i];
+            for (const [i, currentNode] of node.children.entries()) {
                 const nextNode = node.children[i + 1];
 
                 // Paragraphノードの後にブロック要素が続く場合をチェック
