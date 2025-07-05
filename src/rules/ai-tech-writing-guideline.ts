@@ -188,6 +188,7 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
 
     /**
      * 機械的な段落と箇条書きの組み合わせパターンを検出
+     * 注意: コロン関連のパターンは no-ai-colon-continuation ルールで処理されます
      */
     const detectMechanicalListIntroPattern = (node: any) => {
         const children = node.children || [];
@@ -213,14 +214,10 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
                 let isDetected = false;
                 let message = "";
 
-                // パターン1: コロン（：、:）で終わる段落
-                if (/[：:][\s]*$/.test(paragraphText.trim())) {
-                    isDetected = true;
-                    message =
-                        "【構造化】コロン（：）で終わる文の直後の箇条書きは機械的な印象を与える可能性があります。「たとえば、次のような点があります。」のような導入文を使った自然な表現を検討してください。";
-                }
-                // パターン2: 「例えば。」「具体的には。」など、接続表現+句点で終わる段落
-                else if (/(?:例えば|具体的には|詳細には|以下|次に|また)。[\s]*$/.test(paragraphText.trim())) {
+                // 注意: コロンパターンは no-ai-colon-continuation で処理されるため削除
+
+                // パターン: 「例えば。」「具体的には。」など、接続表現+句点で終わる段落
+                if (/(?:例えば|具体的には|詳細には|以下|次に|また)。[\s]*$/.test(paragraphText.trim())) {
                     isDetected = true;
                     message =
                         "【構造化】接続表現と句点で終わる文の直後の箇条書きは機械的な印象を与える可能性があります。「たとえば、次のような点があります。」のような自然な導入文を検討してください。";
@@ -254,7 +251,8 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
             return;
         }
 
-        // コロン + 箇条書きパターンの検出
+        // 接続表現 + 箇条書きパターンの検出
+        // 注意: コロン + ブロック要素パターンは no-ai-colon-continuation ルールで処理
         detectMechanicalListIntroPattern(node);
         // 将来的にここに他の文書レベルの構造化パターンを追加できます
         // 例：
