@@ -1,5 +1,5 @@
-import type { TextlintRuleModule } from "@textlint/types";
 import { matchPatterns } from "@textlint/regexp-string-matcher";
+import type { TextlintRuleModule } from "@textlint/types";
 import { StringSource } from "textlint-util-to-string";
 
 /**

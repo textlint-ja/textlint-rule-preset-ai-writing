@@ -32,7 +32,8 @@
   ],
   "scripts": {
     "build": "textlint-scripts build",
-    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,css}\"",
+    "format": "biome check --write ./",
+    "lint": "biome check ./",
     "prepare": "git config --local core.hooksPath .githooks",
     "prepublishOnly": "npm run build",
     "test": "npm run test:unit && npm run lint:text && npm run lint:README",
@@ -43,7 +44,7 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,css}": [
-      "prettier --write"
+      "biome format --write --no-errors-on-unmatched"
     ]
   },
   "prettier": {
@@ -53,10 +54,11 @@
     "trailingComma": "none"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.0.6",
     "@textlint/types": "^14.8.4",
     "@types/node": "^24.0.1",
+    "husky": "^9.1.7",
     "lint-staged": "^16.1.2",
-    "prettier": "^3.5.3",
     "textlint": "^14.8.4",
     "textlint-rule-preset-japanese": "^10.0.4",
     "textlint-scripts": "^14.8.4",

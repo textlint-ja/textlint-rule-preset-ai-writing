@@ -1,5 +1,5 @@
-import type { TextlintRuleModule } from "@textlint/types";
 import { matchPatterns } from "@textlint/regexp-string-matcher";
+import type { TextlintRuleModule } from "@textlint/types";
 
 export interface Options {
     // 指定したパターンにマッチする場合、エラーを報告しません
@@ -56,7 +56,7 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
                 return;
             }
 
-            let emojiEmphasizeMatches: RegExpExecArray[] = [];
+            const emojiEmphasizeMatches: RegExpExecArray[] = [];
 
             // 絵文字 + 太字の組み合わせパターンを検出
             if (!disableEmojiEmphasisPatterns) {
@@ -125,7 +125,7 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
                 }
             }
 
-            let emojiEmphasizeMatches: RegExpExecArray[] = [];
+            const emojiEmphasizeMatches: RegExpExecArray[] = [];
 
             // リストアイテム内での絵文字 + 太字パターンを検出
             if (!disableEmojiEmphasisPatterns) {

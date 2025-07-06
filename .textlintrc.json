@@ -1,7 +1,7 @@
 {
-  "plugins": {},
-  "filters": {},
-  "rules": {
-    "preset-japanese": true
-  }
+    "plugins": {},
+    "filters": {},
+    "rules": {
+        "preset-japanese": true
+    }
 }

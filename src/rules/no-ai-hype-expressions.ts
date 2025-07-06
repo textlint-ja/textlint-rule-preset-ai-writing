@@ -1,5 +1,5 @@
-import type { TextlintRuleModule } from "@textlint/types";
 import { matchPatterns } from "@textlint/regexp-string-matcher";
+import type { TextlintRuleModule } from "@textlint/types";
 
 export interface Options {
     // If node's text includes allowed patterns, does not report.

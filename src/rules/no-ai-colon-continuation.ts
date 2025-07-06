@@ -1,6 +1,6 @@
 import { matchPatterns } from "@textlint/regexp-string-matcher";
-import { StringSource } from "textlint-util-to-string";
 import { tokenize } from "kuromojin";
+import { StringSource } from "textlint-util-to-string";
 
 /**
  * コロンの直後にブロック要素が続くパターンを検出するルール
