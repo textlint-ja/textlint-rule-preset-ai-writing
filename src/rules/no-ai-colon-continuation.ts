@@ -102,7 +102,7 @@ const rule = (context: any, options: any = {}) => {
                 // その他の品詞（助詞等）の場合は文脈による
                 // より保守的にエラーとする
                 return false;
-            } catch (error) {
+            } catch (_error) {
                 // 形態素解析でエラーが発生した場合は許可（保守的にエラーを避ける）
                 return true;
             }

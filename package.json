@@ -1,78 +1,78 @@
 {
-  "name": "@textlint-ja/textlint-rule-preset-ai-writing",
-  "version": "1.5.0",
-  "description": "textlintプリセット：AIっぽい記述パターンを検出し、より自然な日本語表現を促すルール集",
-  "keywords": [
-    "textlintrule",
-    "textlint-rule-preset",
-    "japanese",
-    "ai-writing",
-    "natural-writing",
-    "preset"
-  ],
-  "homepage": "https://github.com/textlint-ja/textlint-rule-preset-ai-writing",
-  "bugs": {
-    "url": "https://github.com/textlint-ja/textlint-rule-preset-ai-writing/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/textlint-ja/textlint-rule-preset-ai-writing.git"
-  },
-  "license": "MIT",
-  "author": "azu",
-  "main": "lib/index.js",
-  "directories": {
-    "lib": "lib",
-    "test": "test"
-  },
-  "files": [
-    "bin/",
-    "lib/",
-    "src/"
-  ],
-  "scripts": {
-    "build": "textlint-scripts build",
-    "format": "biome check --write ./",
-    "lint": "biome check ./",
-    "prepare": "git config --local core.hooksPath .githooks",
-    "prepublishOnly": "npm run build",
-    "test": "npm run test:unit && npm run lint:text && npm run lint:README",
-    "lint:text": "textlint README.md",
-    "lint:README": "bash lint-README.sh",
-    "test:unit": "textlint-scripts test",
-    "watch": "textlint-scripts build --watch"
-  },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx,css}": [
-      "biome format --write --no-errors-on-unmatched"
-    ]
-  },
-  "prettier": {
-    "singleQuote": false,
-    "printWidth": 120,
-    "tabWidth": 4,
-    "trailingComma": "none"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "^2.0.6",
-    "@textlint/types": "^14.8.4",
-    "@types/node": "^24.0.1",
-    "husky": "^9.1.7",
-    "lint-staged": "^16.1.2",
-    "textlint": "^14.8.4",
-    "textlint-rule-preset-japanese": "^10.0.4",
-    "textlint-scripts": "^14.8.4",
-    "textlint-tester": "^14.8.4",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.8.3"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "dependencies": {
-    "@textlint/regexp-string-matcher": "^2.0.2",
-    "kuromojin": "^3.0.1",
-    "textlint-util-to-string": "^3.3.4"
-  },
-  "packageManager": "npm@10.9.2+sha512.8ab88f10f224a0c614cb717a7f7c30499014f77134120e9c1f0211ea3cf3397592cbe483feb38e0c4b3be1c54e347292c76a1b5edb94a3289d5448484ab8ac81"
+    "name": "@textlint-ja/textlint-rule-preset-ai-writing",
+    "version": "1.5.0",
+    "description": "textlintプリセット：AIっぽい記述パターンを検出し、より自然な日本語表現を促すルール集",
+    "keywords": [
+        "textlintrule",
+        "textlint-rule-preset",
+        "japanese",
+        "ai-writing",
+        "natural-writing",
+        "preset"
+    ],
+    "homepage": "https://github.com/textlint-ja/textlint-rule-preset-ai-writing",
+    "bugs": {
+        "url": "https://github.com/textlint-ja/textlint-rule-preset-ai-writing/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/textlint-ja/textlint-rule-preset-ai-writing.git"
+    },
+    "license": "MIT",
+    "author": "azu",
+    "main": "lib/index.js",
+    "directories": {
+        "lib": "lib",
+        "test": "test"
+    },
+    "files": [
+        "bin/",
+        "lib/",
+        "src/"
+    ],
+    "scripts": {
+        "build": "textlint-scripts build",
+        "format": "biome check --write ./",
+        "lint": "biome check ./",
+        "prepare": "git config --local core.hooksPath .githooks",
+        "prepublishOnly": "npm run build",
+        "test": "npm run test:unit && npm run lint:text && npm run lint:README",
+        "lint:text": "textlint README.md",
+        "lint:README": "bash lint-README.sh",
+        "test:unit": "textlint-scripts test",
+        "watch": "textlint-scripts build --watch"
+    },
+    "lint-staged": {
+        "*.{js,jsx,ts,tsx,css}": [
+            "biome format --write --no-errors-on-unmatched"
+        ]
+    },
+    "prettier": {
+        "singleQuote": false,
+        "printWidth": 120,
+        "tabWidth": 4,
+        "trailingComma": "none"
+    },
+    "devDependencies": {
+        "@biomejs/biome": "^2.0.6",
+        "@textlint/types": "^14.8.4",
+        "@types/node": "^24.0.1",
+        "husky": "^9.1.7",
+        "lint-staged": "^16.1.2",
+        "textlint": "^14.8.4",
+        "textlint-rule-preset-japanese": "^10.0.4",
+        "textlint-scripts": "^14.8.4",
+        "textlint-tester": "^14.8.4",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.8.3"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "dependencies": {
+        "@textlint/regexp-string-matcher": "^2.0.2",
+        "kuromojin": "^3.0.1",
+        "textlint-util-to-string": "^3.3.4"
+    },
+    "packageManager": "npm@10.9.2+sha512.8ab88f10f224a0c614cb717a7f7c30499014f77134120e9c1f0211ea3cf3397592cbe483feb38e0c4b3be1c54e347292c76a1b5edb94a3289d5448484ab8ac81"
 }
