@@ -1,8 +1,8 @@
-import noAiListFormatting from "./rules/no-ai-list-formatting";
-import noAiHypeExpressions from "./rules/no-ai-hype-expressions";
-import noAiEmphasisPatterns from "./rules/no-ai-emphasis-patterns";
 import aiTechWritingGuideline from "./rules/ai-tech-writing-guideline";
 import noAiColonContinuation from "./rules/no-ai-colon-continuation";
+import noAiEmphasisPatterns from "./rules/no-ai-emphasis-patterns";
+import noAiHypeExpressions from "./rules/no-ai-hype-expressions";
+import noAiListFormatting from "./rules/no-ai-list-formatting";
 
 const preset = {
     rules: {

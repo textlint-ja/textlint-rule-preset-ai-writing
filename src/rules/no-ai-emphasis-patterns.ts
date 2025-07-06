@@ -1,7 +1,7 @@
-import type { TextlintRuleModule } from "@textlint/types";
 import { matchPatterns } from "@textlint/regexp-string-matcher";
+import type { TextlintRuleContext, TextlintRuleModule } from "@textlint/types";
 
-export interface Options {
+type Options = {
     // 指定したパターンにマッチする場合、エラーを報告しません
     // 文字列または正規表現パターン ("/pattern/flags") で指定可能
     allows?: string[];
@@ -9,9 +9,9 @@ export interface Options {
     disableEmojiEmphasisPatterns?: boolean;
     // 情報系プレフィックスパターンの検出を無効にする
     disableInfoPatterns?: boolean;
-}
+};
 
-const rule: TextlintRuleModule<Options> = (context, options = {}) => {
+const rule: TextlintRuleModule<Options> = (context: TextlintRuleContext, options = {}) => {
     const { Syntax, RuleError, report, getSource, locator } = context;
     const allows = options.allows ?? [];
     const disableEmojiEmphasisPatterns = options.disableEmojiEmphasisPatterns ?? false;
@@ -56,17 +56,17 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
                 return;
             }
 
-            let emojiEmphasizeMatches: RegExpExecArray[] = [];
+            const emojiEmphasizeMatches: RegExpMatchArray[] = [];
 
             // 絵文字 + 太字の組み合わせパターンを検出
             if (!disableEmojiEmphasisPatterns) {
-                // 絵文字の正規表現を修正（サロゲートペア対応）
-                const emojiEmphasizePattern = /([ℹ️🔍✅❌⚠️💡📝📋📌🔗🎯🚀⭐✨💯🔥📊📈])\s*\*\*([^*]+)\*\*/g;
+                // 絵文字の正規表現を修正（Unicodeフラグでサロゲートペア対応）
+                const emojiEmphasizePattern =
+                    /(ℹ️|🔍|✅|❌|⚠️|💡|📝|📋|📌|🔗|🎯|🚀|⭐|✨|💯|🔥|📊|📈)\s*\*\*([^*]+)\*\*/gu;
 
-                let match;
-                while ((match = emojiEmphasizePattern.exec(text)) !== null) {
-                    const matchStart = match.index;
-                    const matchEnd = match.index + match[0].length;
+                for (const match of text.matchAll(emojiEmphasizePattern)) {
+                    const matchStart = match.index ?? 0;
+                    const matchEnd = matchStart + match[0].length;
 
                     emojiEmphasizeMatches.push(match);
 
@@ -86,16 +86,15 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
             if (!disableInfoPatterns) {
                 const infoPrefixPattern = new RegExp(`\\*\\*(${infoPatterns.join("|")})([：:].*?)?\\*\\*`, "g");
 
-                let match;
-                while ((match = infoPrefixPattern.exec(text)) !== null) {
-                    const matchStart = match.index;
-                    const matchEnd = match.index + match[0].length;
+                for (const match of text.matchAll(infoPrefixPattern)) {
+                    const matchStart = match.index ?? 0;
+                    const matchEnd = matchStart + match[0].length;
                     const prefixText = match[1];
 
                     // 絵文字+太字のマッチと重複していないかチェック
                     const isOverlapping = emojiEmphasizeMatches.some((emojiMatch) => {
-                        const emojiStart = emojiMatch.index!;
-                        const emojiEnd = emojiMatch.index! + emojiMatch[0].length;
+                        const emojiStart = emojiMatch.index ?? 0;
+                        const emojiEnd = emojiStart + emojiMatch[0].length;
                         return matchStart < emojiEnd && matchEnd > emojiStart;
                     });
 
@@ -125,16 +124,16 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
                 }
             }
 
-            let emojiEmphasizeMatches: RegExpExecArray[] = [];
+            const emojiEmphasizeMatches: RegExpMatchArray[] = [];
 
             // リストアイテム内での絵文字 + 太字パターンを検出
             if (!disableEmojiEmphasisPatterns) {
-                const emojiEmphasizePattern = /([ℹ️🔍✅❌⚠️💡📝📋📌🔗🎯🚀⭐✨💯🔥📊📈])\s*\*\*([^*]+)\*\*/g;
+                const emojiEmphasizePattern =
+                    /(ℹ️|🔍|✅|❌|⚠️|💡|📝|📋|📌|🔗|🎯|🚀|⭐|✨|💯|🔥|📊|📈)\s*\*\*([^*]+)\*\*/gu;
 
-                let match;
-                while ((match = emojiEmphasizePattern.exec(text)) !== null) {
-                    const matchStart = match.index;
-                    const matchEnd = match.index + match[0].length;
+                for (const match of text.matchAll(emojiEmphasizePattern)) {
+                    const matchStart = match.index ?? 0;
+                    const matchEnd = matchStart + match[0].length;
 
                     emojiEmphasizeMatches.push(match);
 
@@ -154,16 +153,15 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
             if (!disableInfoPatterns) {
                 const infoPrefixPattern = new RegExp(`\\*\\*(${infoPatterns.join("|")})([：:].*?)?\\*\\*`, "g");
 
-                let match;
-                while ((match = infoPrefixPattern.exec(text)) !== null) {
-                    const matchStart = match.index;
-                    const matchEnd = match.index + match[0].length;
+                for (const match of text.matchAll(infoPrefixPattern)) {
+                    const matchStart = match.index ?? 0;
+                    const matchEnd = matchStart + match[0].length;
                     const prefixText = match[1];
 
                     // 絵文字+太字のマッチと重複していないかチェック
                     const isOverlapping = emojiEmphasizeMatches.some((emojiMatch) => {
-                        const emojiStart = emojiMatch.index!;
-                        const emojiEnd = emojiMatch.index! + emojiMatch[0].length;
+                        const emojiStart = emojiMatch.index ?? 0;
+                        const emojiEnd = emojiStart + emojiMatch[0].length;
                         return matchStart < emojiEnd && matchEnd > emojiStart;
                     });
 

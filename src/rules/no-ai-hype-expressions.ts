@@ -1,7 +1,7 @@
-import type { TextlintRuleModule } from "@textlint/types";
 import { matchPatterns } from "@textlint/regexp-string-matcher";
+import type { TextlintRuleContext, TextlintRuleModule } from "@textlint/types";
 
-export interface Options {
+type Options = {
     // If node's text includes allowed patterns, does not report.
     // Can be string or RegExp-like string ("/pattern/flags")
     allows?: string[];
@@ -9,9 +9,9 @@ export interface Options {
     disableAbsolutenessPatterns?: boolean;
     disableAbstractPatterns?: boolean;
     disabledPredictivePatterns?: boolean;
-}
+};
 
-const rule: TextlintRuleModule<Options> = (context, options = {}) => {
+const rule: TextlintRuleModule<Options> = (context: TextlintRuleContext, options = {}) => {
     const { Syntax, RuleError, report, getSource, locator } = context;
     const allows = options.allows ?? [];
     const disableAbsolutenessPatterns = options.disableAbsolutenessPatterns ?? false;
@@ -176,7 +176,7 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
             for (const { pattern, message } of patterns) {
                 const matches = text.matchAll(pattern);
                 for (const match of matches) {
-                    const index = match.index ?? 0;
+                    const index: number = match.index ?? 0;
                     const matchRange = [index, index + match[0].length] as const;
                     const ruleError = new RuleError(message, {
                         padding: locator.range(matchRange)
