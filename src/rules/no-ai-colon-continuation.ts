@@ -1,6 +1,16 @@
+import type { AnyTxtNode } from "@textlint/ast-node-types";
 import { matchPatterns } from "@textlint/regexp-string-matcher";
+import type { TextlintRuleContext, TextlintRuleModule } from "@textlint/types";
 import { tokenize } from "kuromojin";
 import { StringSource } from "textlint-util-to-string";
+
+type Options = {
+    allows?: string[];
+    disableCodeBlock?: boolean;
+    disableList?: boolean;
+    disableQuote?: boolean;
+    disableTable?: boolean;
+};
 
 /**
  * コロンの直後にブロック要素が続くパターンを検出するルール
@@ -15,7 +25,7 @@ import { StringSource } from "textlint-util-to-string";
  * - 「次のように使用します」
  * - 「以下の手順で実行してください」
  */
-const rule = (context: any, options: any = {}) => {
+const rule: TextlintRuleModule<Options> = (context: TextlintRuleContext, options: Options = {}) => {
     const { Syntax, RuleError, report, getSource, locator } = context;
     const allows = options.allows ?? [];
     const disableCodeBlock = options.disableCodeBlock ?? false;
@@ -25,7 +35,7 @@ const rule = (context: any, options: any = {}) => {
 
     // AST走査で隣接するノードの組み合わせをチェック
 
-    const checkColonContinuation = async (paragraphNode: any, nextNode: any) => {
+    const checkColonContinuation = async (paragraphNode: AnyTxtNode, nextNode: AnyTxtNode) => {
         // Paragraphノードのテキストを取得
         const paragraphText = getSource(paragraphNode);
 
@@ -43,7 +53,7 @@ const rule = (context: any, options: any = {}) => {
         }
 
         // StringSourceを使ってMarkdownを取り除いたテキストを取得
-        const stringSource = new StringSource(paragraphNode);
+        const stringSource = new StringSource(paragraphNode as never);
         const plainText = stringSource.toString().trim();
 
         // プレーンテキストでもコロン（半角・全角）で終わっているかチェック
@@ -146,7 +156,7 @@ const rule = (context: any, options: any = {}) => {
     };
 
     return {
-        async [Syntax.Document](node: any) {
+        async [Syntax.Document](node: AnyTxtNode & { children: AnyTxtNode[] }) {
             // ドキュメントの子ノードを順番にチェック
             for (const [i, currentNode] of node.children.entries()) {
                 const nextNode = node.children[i + 1];

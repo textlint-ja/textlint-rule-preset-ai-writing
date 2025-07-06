@@ -17,16 +17,16 @@
         "rules": {
             "recommended": true,
             "suspicious": {
-                "noExplicitAny": "warn",
-                "noImplicitAnyLet": "warn",
-                "noAssignInExpressions": "warn",
-                "noMisleadingCharacterClass": "warn"
+                "noExplicitAny": "error",
+                "noImplicitAnyLet": "error",
+                "noAssignInExpressions": "error",
+                "noMisleadingCharacterClass": "error"
             },
             "style": {
-                "noNonNullAssertion": "warn"
+                "noNonNullAssertion": "error"
             },
             "correctness": {
-                "noUnusedVariables": "warn"
+                "noUnusedVariables": "error"
             }
         }
     },

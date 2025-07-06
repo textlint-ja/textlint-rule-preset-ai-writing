@@ -1,16 +1,16 @@
 import { matchPatterns } from "@textlint/regexp-string-matcher";
-import type { TextlintRuleModule } from "@textlint/types";
+import type { TextlintRuleContext, TextlintRuleModule } from "@textlint/types";
 
-export interface Options {
+type Options = {
     // If node's text includes allowed patterns, does not report.
     // Can be string or RegExp-like string ("/pattern/flags")
     allows?: string[];
     // Disable specific pattern checks
     disableBoldListItems?: boolean;
     disableEmojiListItems?: boolean;
-}
+};
 
-const rule: TextlintRuleModule<Options> = (context, options = {}) => {
+const rule: TextlintRuleModule<Options> = (context: TextlintRuleContext, options = {}) => {
     const { Syntax, RuleError, report, getSource, locator } = context;
     const allows = options.allows ?? [];
     const disableBoldListItems = options.disableBoldListItems ?? false;
@@ -80,9 +80,9 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
             // Check for bold list item pattern: - **text**: description
             if (!disableBoldListItems) {
                 const boldListPattern = /^[\s]*[-*+]\s+\*\*([^*]+)\*\*\s*:/;
-                const boldMatch = text.match(boldListPattern);
+                const boldMatch: RegExpMatchArray | null = text.match(boldListPattern);
                 if (boldMatch) {
-                    const matchStart = boldMatch.index ?? 0;
+                    const matchStart: number = boldMatch.index ?? 0;
                     const matchEnd = matchStart + boldMatch[0].length;
                     const matchRange = [matchStart, matchEnd] as const;
                     const ruleError = new RuleError(
@@ -97,10 +97,10 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
 
             // Check for emoji list items
             if (!disableEmojiListItems) {
-                const emojiMatch = text.match(flashyEmojiPattern);
+                const emojiMatch: RegExpMatchArray | null = text.match(flashyEmojiPattern);
                 if (emojiMatch) {
                     const emoji = emojiMatch[0];
-                    const emojiIndex = emojiMatch.index ?? 0;
+                    const emojiIndex: number = emojiMatch.index ?? 0;
                     const matchRange = [emojiIndex, emojiIndex + emoji.length] as const;
                     const ruleError = new RuleError(
                         `リストアイテムでの絵文字「${emoji}」の使用は、読み手によっては機械的な印象を与える場合があります。テキストベースの表現も検討してみてください。`,

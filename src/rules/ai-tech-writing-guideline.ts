@@ -1,5 +1,6 @@
+import type { AnyTxtNode } from "@textlint/ast-node-types";
 import { matchPatterns } from "@textlint/regexp-string-matcher";
-import type { TextlintRuleModule } from "@textlint/types";
+import type { TextlintRuleContext, TextlintRuleModule } from "@textlint/types";
 import { StringSource } from "textlint-util-to-string";
 
 /**
@@ -9,7 +10,7 @@ import { StringSource } from "textlint-util-to-string";
  * https://github.com/textlint-ja/textlint-rule-preset-ai-writing/blob/main/docs/tech-writing-guidelines.md
  */
 
-export interface Options {
+type Options = {
     // If node's text includes allowed patterns, does not report.
     // Can be string or RegExp-like string ("/pattern/flags")
     allows?: string[];
@@ -21,9 +22,9 @@ export interface Options {
     disableStructureGuidance?: boolean;
     // Enable document-level analysis
     enableDocumentAnalysis?: boolean;
-}
+};
 
-const rule: TextlintRuleModule<Options> = (context, options = {}) => {
+const rule: TextlintRuleModule<Options> = (context: TextlintRuleContext, options = {}) => {
     const { Syntax, report, locator } = context;
     const allows = options.allows ?? [];
     const disableRedundancyGuidance = options.disableRedundancyGuidance ?? false;
@@ -190,8 +191,9 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
      * 機械的な段落と箇条書きの組み合わせパターンを検出
      * 注意: コロン関連のパターンは no-ai-colon-continuation ルールで処理されます
      */
-    const detectMechanicalListIntroPattern = (node: any) => {
-        const children = node.children || [];
+    const detectMechanicalListIntroPattern = (node: AnyTxtNode) => {
+        const nodeObj = node as AnyTxtNode & { children?: AnyTxtNode[] };
+        const children = nodeObj.children || [];
 
         for (let i = 0; i < children.length - 1; i++) {
             const currentNode = children[i];
@@ -200,7 +202,7 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
             // Paragraph → List のパターンを検出
             if (currentNode.type === "Paragraph" && nextNode.type === "List") {
                 // Paragraphの最後の文字列ノードを取得
-                const paragraphSource = new StringSource(currentNode, {
+                const paragraphSource = new StringSource(currentNode as never, {
                     replacer({ node, emptyValue }) {
                         if (node.type === "Code" || node.type === "InlineCode") {
                             return emptyValue();
@@ -217,7 +219,9 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
                 // 注意: コロンパターンは no-ai-colon-continuation で処理されるため削除
 
                 // パターン: 「例えば。」「具体的には。」など、接続表現+句点で終わる段落
-                if (/(?:例えば|具体的には|詳細には|以下|次に|また)。[\s]*$/.test(paragraphText.trim())) {
+                const connectivePattern = /(?:例えば|具体的には|詳細には|以下|次に|また)。[\s]*$/;
+                const connectiveMatch = paragraphText.trim().match(connectivePattern);
+                if (connectiveMatch) {
                     isDetected = true;
                     message =
                         "【構造化】接続表現と句点で終わる文の直後の箇条書きは機械的な印象を与える可能性があります。「たとえば、次のような点があります。」のような自然な導入文を検討してください。";
@@ -246,7 +250,7 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
     /**
      * 構造化ガイダンスに関する文書レベルの検出処理
      */
-    const processDocumentStructureGuidance = (node: any) => {
+    const processDocumentStructureGuidance = (node: AnyTxtNode) => {
         if (disableStructureGuidance) {
             return;
         }
@@ -265,9 +269,9 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
     /**
      * 段落内のガイダンスパターンを検出・報告
      */
-    const processParagraphGuidance = (node: any) => {
+    const processParagraphGuidance = (node: AnyTxtNode) => {
         // StringSourceを使用してコードブロックを除外したテキストを取得
-        const source = new StringSource(node, {
+        const source = new StringSource(node as never, {
             replacer({ node, emptyValue }) {
                 // コードブロック、インラインコードを除外
                 if (node.type === "Code" || node.type === "InlineCode") {
@@ -298,13 +302,13 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
         for (const { pattern, message, category } of allGuidancePatterns) {
             const matches = text.matchAll(pattern);
             for (const match of matches) {
-                const index = match.index ?? 0;
+                const index: number = match.index ?? 0;
 
                 // プレーンテキストの位置を元のノード内の位置に変換
                 const originalIndex = source.originalIndexFromIndex(index);
                 const originalEndIndex = source.originalIndexFromIndex(index + match[0].length);
 
-                if (originalIndex !== undefined && originalEndIndex !== undefined) {
+                if (typeof originalIndex === "number" && typeof originalEndIndex === "number") {
                     const originalRange = [originalIndex, originalEndIndex] as const;
 
                     // カテゴリ別のメトリクスを更新
@@ -323,7 +327,7 @@ const rule: TextlintRuleModule<Options> = (context, options = {}) => {
     /**
      * 文書全体の品質分析結果を報告
      */
-    const processDocumentAnalysis = (node: any) => {
+    const processDocumentAnalysis = (node: AnyTxtNode) => {
         // 文書全体の分析を実行（enableDocumentAnalysisがtrueの場合）
         if (enableDocumentAnalysis && hasDocumentIssues) {
             const totalIssues = Object.values(documentQualityMetrics).reduce((sum, count) => sum + count, 0);
