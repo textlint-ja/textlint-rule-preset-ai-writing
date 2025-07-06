@@ -1,2 +1,2 @@
 #!/bin/sh
-npx lint-staged
+npx --no-install lint-staged
