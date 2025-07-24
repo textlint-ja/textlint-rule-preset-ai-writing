@@ -30,7 +30,7 @@ tester.run("no-ai-emphasis-patterns", noAiEmphasisPatterns, {
         // 見出し内太字（通常のテキストとして）
         "# 通常の見出し",
         "## 太字なしの見出し",
-        
+
         // 見出し内太字検出を無効化
         {
             text: "# **太字の見出し**",
