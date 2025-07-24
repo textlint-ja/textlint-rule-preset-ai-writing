@@ -9,13 +9,16 @@ type Options = {
     disableEmojiEmphasisPatterns?: boolean;
     // 情報系プレフィックスパターンの検出を無効にする
     disableInfoPatterns?: boolean;
+    // 見出し内の太字パターンの検出を無効にする
+    disableHeadingEmphasisPatterns?: boolean;
 };
 
 const rule: TextlintRuleModule<Options> = (context: TextlintRuleContext, options = {}) => {
-    const { Syntax, RuleError, report, getSource, locator } = context;
+    const { Syntax, RuleError, report, getSource, locator, fixer } = context;
     const allows = options.allows ?? [];
     const disableEmojiEmphasisPatterns = options.disableEmojiEmphasisPatterns ?? false;
     const disableInfoPatterns = options.disableInfoPatterns ?? false;
+    const disableHeadingEmphasisPatterns = options.disableHeadingEmphasisPatterns ?? false;
 
     // 機械的な情報系プレフィックス
     const infoPatterns = [
@@ -177,6 +180,39 @@ const rule: TextlintRuleModule<Options> = (context: TextlintRuleContext, options
                         );
                     }
                 }
+            }
+        },
+
+        [Syntax.Header](node) {
+            if (disableHeadingEmphasisPatterns) {
+                return;
+            }
+
+            const text = getSource(node);
+
+            // allowsパターンにマッチする場合はスキップ
+            if (allows.length > 0) {
+                const matchedResults = matchPatterns(text, allows);
+                if (matchedResults.length > 0) {
+                    return;
+                }
+            }
+
+            // 見出し内の太字パターンを検出（**text** または __text__）
+            const headingEmphasisPattern = /(\*\*|__)(.*?)\1/g;
+
+            for (const match of text.matchAll(headingEmphasisPattern)) {
+                const matchStart = match.index ?? 0;
+                const matchEnd = matchStart + match[0].length;
+                const innerText = match[2];
+
+                report(
+                    node,
+                    new RuleError(`見出し内の太字は不要です。見出し自体が強調のため、追加の太字は冗長です。`, {
+                        padding: locator.range([matchStart, matchEnd]),
+                        fix: fixer.replaceTextRange([matchStart, matchEnd], innerText)
+                    })
+                );
             }
         }
     };
