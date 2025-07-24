@@ -178,6 +178,8 @@ AIが機械的に生成しがちな強調パターンを検出します。
 ```markdown
 これは**非常に**重要な項目です。
 **注意**してください。
+# **重要なお知らせ**
+## **太字**の見出し
 ```
 
 #### より自然な表現
@@ -185,11 +187,16 @@ AIが機械的に生成しがちな強調パターンを検出します。
 ```markdown
 これは重要な項目です。
 注意してください。
+# 重要なお知らせ
+## 太字の見出し
 ```
 
 #### オプション
 
 - `allows`: 指定したパターンにマッチする場合、エラーを報告しません
+- `disableEmojiEmphasisPatterns`: `true`にすると絵文字と太字の組み合わせパターンの検出を無効にする
+- `disableInfoPatterns`: `true`にすると情報系プレフィックスパターンの検出を無効にする
+- `disableHeadingEmphasisPatterns`: `true`にすると見出し内の太字パターンの検出を無効にする
 
 ### no-ai-colon-continuation
 
@@ -314,6 +321,12 @@ command
                 "disableAbsolutenessPatterns": false,
                 "disableAbstractPatterns": false,
                 "disabledPredictivePatterns": false
+            },
+            "no-ai-emphasis-patterns": {
+                "allows": ["許可したいテキスト", "/正規表現パターン/"],
+                "disableEmojiEmphasisPatterns": false,
+                "disableInfoPatterns": false,
+                "disableHeadingEmphasisPatterns": false
             },
             "no-ai-colon-continuation": {
                 "allows": ["許可したいテキスト", "/正規表現パターン/"],

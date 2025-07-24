@@ -25,6 +25,24 @@ tester.run("no-ai-emphasis-patterns", noAiEmphasisPatterns, {
             options: {
                 allows: ["/ℹ️.*注意/"]
             }
+        },
+
+        // 見出し内太字（通常のテキストとして）
+        "# 通常の見出し",
+        "## 太字なしの見出し",
+        
+        // 見出し内太字検出を無効化
+        {
+            text: "# **太字の見出し**",
+            options: {
+                disableHeadingEmphasisPatterns: true
+            }
+        },
+        {
+            text: "## これは**太字**を含む見出し",
+            options: {
+                disableHeadingEmphasisPatterns: true
+            }
         }
     ],
     invalid: [
@@ -133,6 +151,51 @@ tester.run("no-ai-emphasis-patterns", noAiEmphasisPatterns, {
                 {
                     message:
                         "絵文字と太字の組み合わせは機械的な印象を与える可能性があります。より自然な表現を検討してください。"
+                }
+            ]
+        },
+
+        // 見出し内の太字パターン
+        {
+            text: "# **hoge**",
+            errors: [
+                {
+                    message: "見出し内の太字は不要です。見出し自体が強調のため、追加の太字は冗長です。"
+                }
+            ]
+        },
+        {
+            text: "## **重要な項目**について",
+            errors: [
+                {
+                    message: "見出し内の太字は不要です。見出し自体が強調のため、追加の太字は冗長です。"
+                }
+            ]
+        },
+        {
+            text: "### この見出しには**太字**が含まれています",
+            errors: [
+                {
+                    message: "見出し内の太字は不要です。見出し自体が強調のため、追加の太字は冗長です。"
+                }
+            ]
+        },
+        {
+            text: "# __アンダースコア__で囲まれた太字",
+            errors: [
+                {
+                    message: "見出し内の太字は不要です。見出し自体が強調のため、追加の太字は冗長です。"
+                }
+            ]
+        },
+        {
+            text: "## 複数の**太字**と**強調**がある場合",
+            errors: [
+                {
+                    message: "見出し内の太字は不要です。見出し自体が強調のため、追加の太字は冗長です。"
+                },
+                {
+                    message: "見出し内の太字は不要です。見出し自体が強調のため、追加の太字は冗長です。"
                 }
             ]
         }
