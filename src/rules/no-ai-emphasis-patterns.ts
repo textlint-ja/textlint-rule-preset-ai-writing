@@ -183,7 +183,7 @@ const rule: TextlintRuleModule<Options> = (context: TextlintRuleContext, options
             }
         },
 
-        [Syntax.Heading](node) {
+        [Syntax.Header](node) {
             if (disableHeadingEmphasisPatterns) {
                 return;
             }
@@ -204,18 +204,14 @@ const rule: TextlintRuleModule<Options> = (context: TextlintRuleContext, options
             for (const match of text.matchAll(headingEmphasisPattern)) {
                 const matchStart = match.index ?? 0;
                 const matchEnd = matchStart + match[0].length;
-                const emphasisMark = match[1];
                 const innerText = match[2];
 
                 report(
                     node,
-                    new RuleError(
-                        `見出し内の太字は不要です。見出し自体が強調のため、追加の太字は冗長です。`,
-                        {
-                            padding: locator.range([matchStart, matchEnd]),
-                            fix: fixer.replaceTextRange([matchStart, matchEnd], innerText)
-                        }
-                    )
+                    new RuleError(`見出し内の太字は不要です。見出し自体が強調のため、追加の太字は冗長です。`, {
+                        padding: locator.range([matchStart, matchEnd]),
+                        fix: fixer.replaceTextRange([matchStart, matchEnd], innerText)
+                    })
                 );
             }
         }
