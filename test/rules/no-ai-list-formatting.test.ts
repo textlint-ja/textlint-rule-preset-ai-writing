@@ -175,6 +175,17 @@ tester.run("no-ai-list-formatting", noAiListFormatting, {
                     range: [2, 4]
                 }
             ]
+        },
+        // Full-width colon
+        {
+            text: "- **重要情報**：これは重要な項目です",
+            errors: [
+                {
+                    message:
+                        "リストアイテムで強調（**）とコロン（：）の組み合わせは機械的な印象を与える可能性があります。より自然な表現を検討してください。",
+                    range: [0, 9]
+                }
+            ]
         }
     ]
 });
