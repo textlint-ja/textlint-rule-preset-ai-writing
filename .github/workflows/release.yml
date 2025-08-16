@@ -1,0 +1,134 @@
+name: Release
+
+on:
+  pull_request:
+    branches:
+      - master
+      - main
+    types:
+      - closed
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish (e.g., 1.2.3)'
+        required: false
+        type: string
+
+jobs:
+  release:
+    if: |
+      (github.event_name == 'pull_request' && 
+       github.event.pull_request.merged == true &&
+       contains(github.event.pull_request.labels.*.name, 'Type: Release')) ||
+      github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write  # OIDC
+      pull-requests: write  # PR comment
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+      
+      - name: Get package info
+        id: package
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ github.event.inputs.version }}" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            VERSION=$(node -p "require('./package.json').version")
+          fi
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "name=$PACKAGE_NAME" >> $GITHUB_OUTPUT
+      
+      - name: Check if tag exists
+        id: tag-check
+        run: |
+          if git rev-parse "v${{ steps.package.outputs.version }}" >/dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Setup Node.js
+        if: steps.tag-check.outputs.exists == 'false'
+        uses: actions/setup-node@3235b876344d2a9aa001b8d1453c930bba69e610 # v3.9.1
+        with:
+          node-version: 22
+          registry-url: 'https://registry.npmjs.org'
+      
+      - name: Ensure npm 11.5.1 or later is installed
+        if: steps.tag-check.outputs.exists == 'false'
+        run: |
+          NPM_VERSION=$(npm -v)
+          echo "Current npm version: $NPM_VERSION"
+          if ! npx semver -r ">=11.5.1" "$NPM_VERSION"; then
+            echo "npm version $NPM_VERSION is too old. Installing latest npm..."
+            npm install -g npm@latest
+            echo "Updated npm version: $(npm -v)"
+          fi
+      
+      - name: Install dependencies
+        if: steps.tag-check.outputs.exists == 'false'
+        run: npm ci
+      
+      - name: Build package
+        if: steps.tag-check.outputs.exists == 'false'
+        run: npm run build
+      
+      - name: Publish to npm with provenance
+        if: steps.tag-check.outputs.exists == 'false'
+        run: npm publish --provenance --access public
+      
+      - name: Create GitHub Release with tag
+        id: create-release
+        if: steps.tag-check.outputs.exists == 'false'
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            RELEASE_URL=$(gh release create "v${{ steps.package.outputs.version }}" \
+              --title "v${{ steps.package.outputs.version }}" \
+              --target "${{ github.sha }}" \
+              --generate-notes)
+          else
+            RELEASE_URL=$(gh release create "v${{ steps.package.outputs.version }}" \
+              --title "v${{ steps.package.outputs.version }}" \
+              --target "${{ github.sha }}" \
+              --notes "${{ github.event.pull_request.body }}")
+          fi
+          echo "url=$RELEASE_URL" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ github.token }}
+      
+      - name: Comment on PR - Success
+        if: |
+          always() && 
+          github.event_name == 'pull_request' && 
+          steps.tag-check.outputs.exists == 'false' &&
+          success()
+        run: |
+          gh pr comment ${{ github.event.pull_request.number }} \
+            --body "✅ **Release v${{ steps.package.outputs.version }} completed successfully!**
+          
+          - 📦 npm package: https://www.npmjs.com/package/${{ steps.package.outputs.name }}/v/${{ steps.package.outputs.version }}
+          - 🏷️ GitHub Release: ${{ steps.create-release.outputs.url }}
+          - 🔗 Workflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        env:
+          GH_TOKEN: ${{ github.token }}
+      
+      - name: Comment on PR - Failure
+        if: |
+          always() && 
+          github.event_name == 'pull_request' && 
+          steps.tag-check.outputs.exists == 'false' &&
+          failure()
+        run: |
+          gh pr comment ${{ github.event.pull_request.number }} \
+            --body "❌ **Release v${{ steps.package.outputs.version }} failed**
+          
+          Please check the workflow logs for details.
+          🔗 Workflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        env:
+          GH_TOKEN: ${{ github.token }}
