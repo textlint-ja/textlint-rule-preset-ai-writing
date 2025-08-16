@@ -43,6 +43,9 @@ jobs:
       - name: Get release notes
         id: release-notes
         run: |
+          # Get the default branch
+          DEFAULT_BRANCH=$(gh api repos/${{ github.repository }} --jq '.default_branch')
+          
           # Get the last tag
           LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
           if [ -z "$LAST_TAG" ]; then
@@ -55,7 +58,7 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             /repos/${{ github.repository }}/releases/generate-notes \
             -f tag_name="v${{ env.VERSION }}" \
-            -f target_commitish="master" \
+            -f target_commitish="$DEFAULT_BRANCH" \
             -f previous_tag_name="${LAST_TAG}" | jq -r '.body')
           
           # Save to file to handle multiline content
