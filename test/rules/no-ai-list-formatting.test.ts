@@ -183,7 +183,7 @@ tester.run("no-ai-list-formatting", noAiListFormatting, {
                 {
                     message:
                         "リストアイテムで強調（**）とコロン（：）の組み合わせは機械的な印象を与える可能性があります。より自然な表現を検討してください。",
-                    range: [0, 9]
+                    range: [0, 11]
                 }
             ]
         }
