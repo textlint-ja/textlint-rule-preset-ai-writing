@@ -79,14 +79,15 @@ const rule: TextlintRuleModule<Options> = (context: TextlintRuleContext, options
 
             // Check for bold list item pattern: - **text**: description
             if (!disableBoldListItems) {
-                const boldListPattern = /^[\s]*[-*+]\s+\*\*([^*]+)\*\*\s*:/;
+                const boldListPattern = /^[\s]*[-*+]\s+\*\*([^*]+)\*\*\s*([:：])/;
                 const boldMatch: RegExpMatchArray | null = text.match(boldListPattern);
                 if (boldMatch) {
                     const matchStart: number = boldMatch.index ?? 0;
                     const matchEnd = matchStart + boldMatch[0].length;
                     const matchRange = [matchStart, matchEnd] as const;
+                    const colon = boldMatch[2];
                     const ruleError = new RuleError(
-                        "リストアイテムで強調（**）とコロン（:）の組み合わせは機械的な印象を与える可能性があります。より自然な表現を検討してください。",
+                        `リストアイテムで強調（**）とコロン（${colon}）の組み合わせは機械的な印象を与える可能性があります。より自然な表現を検討してください。`,
                         {
                             padding: locator.range(matchRange)
                         }
