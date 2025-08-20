@@ -1,0 +1,20 @@
+{
+  "private": true,
+  "name": "textlint-rule-preset-ai-writing-example",
+  "version": "1.0.0",
+  "homepage": "https://github.com/textlint-ja/textlint-rule-preset-ai-writing",
+  "scripts": {
+    "prepare": "install-local ../",
+    "textlint": "textlint ../README.md",
+    "textlint:fix": "textlint --fix ../README.md",
+    "test": "npm run textlint",
+    "website": "textlint-website-generator --output-dir ./dist --title 'AI Writing Checker' --metadataName 'ai-writing-checker' --metadataNamespace 'https://github.com/textlint-ja/textlint-rule-preset-ai-writing' --metadataHomepage 'https://textlint-ja.github.io/textlint-rule-preset-ai-writing/'",
+    "website:deploy": "npm run website && gh-pages -d ./dist"
+  },
+  "devDependencies": {
+    "@textlint/website-generator": "^0.18.0",
+    "textlint": "^14.8.4",
+    "textlint-filter-rule-comments": "^1.2.2",
+    "install-local": "^3.0.1"
+  }
+}
