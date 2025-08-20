@@ -40,7 +40,10 @@
         "lint:text": "textlint README.md",
         "lint:README": "bash lint-README.sh",
         "test:unit": "textlint-scripts test",
-        "watch": "textlint-scripts build --watch"
+        "watch": "textlint-scripts build --watch",
+        "website:build": "npm run build && cd example && npm install && npm run website",
+        "website:dev": "npm run website:build && npx http-server ./example/dist",
+        "website:deploy": "npm run website:build && gh-pages -d ./example/dist"
     },
     "lint-staged": {
         "*.{js,jsx,ts,tsx,css}": [
@@ -56,7 +59,9 @@
     "devDependencies": {
         "@biomejs/biome": "^2.0.6",
         "@textlint/types": "^14.8.4",
+        "@textlint/website-generator": "^0.18.0",
         "@types/node": "^24.0.1",
+        "gh-pages": "^6.3.0",
         "husky": "^9.1.7",
         "lint-staged": "^16.1.2",
         "textlint": "^14.8.4",

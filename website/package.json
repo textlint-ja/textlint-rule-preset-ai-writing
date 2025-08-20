@@ -1,0 +1,8 @@
+{
+  "name": "textlint-ai-writing-website",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@textlint-ja/textlint-rule-preset-ai-writing": "file:.."
+  }
+}

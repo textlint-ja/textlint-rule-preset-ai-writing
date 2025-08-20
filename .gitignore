@@ -230,3 +230,6 @@ fabric.properties
 # Build files
 /lib
 /module
+/public
+/example/dist
+/example/node_modules
