@@ -8,7 +8,7 @@
     "textlint": "textlint ../README.md",
     "textlint:fix": "textlint --fix ../README.md",
     "test": "npm run textlint",
-    "website": "textlint-website-generator --output-dir ./dist --title 'AI Writing Checker' --metadataName 'ai-writing-checker' --metadataNamespace 'https://github.com/textlint-ja/textlint-rule-preset-ai-writing' --metadataHomepage 'https://textlint-ja.github.io/textlint-rule-preset-ai-writing/'",
+    "website": "textlint-website-generator --output-dir ./dist --title 'AI Writing Checker' --metadataName 'ai-writing-checker' --metadataNamespace 'https://github.com/textlint-ja/textlint-rule-preset-ai-writing' --metadataHomepage 'https://github.com/textlint-ja/textlint-rule-preset-ai-writing'",
     "website:deploy": "npm run website && gh-pages -d ./dist"
   },
   "devDependencies": {
