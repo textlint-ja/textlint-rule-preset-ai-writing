@@ -15,7 +15,6 @@
     "@textlint/website-generator": "^0.18.0",
     "textlint": "^14.8.4",
     "textlint-filter-rule-comments": "^1.2.2",
-    "install-local": "^3.0.1",
-    "gh-pages": "^6.3.0"
+    "install-local": "^3.0.1"
   }
 }

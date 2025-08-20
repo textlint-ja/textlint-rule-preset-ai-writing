@@ -2,12 +2,6 @@
     "plugins": {},
     "filters": {},
     "rules": {
-        "preset-ai-writing": {
-            "no-ai-colon-continuation": true,
-            "no-ai-emphasis-patterns": true,
-            "no-ai-hype-expressions": true,
-            "no-ai-list-formatting": true,
-            "ai-tech-writing-guideline": true
-        }
+        "preset-japanese": true
     }
 }
