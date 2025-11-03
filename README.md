@@ -256,6 +256,34 @@ command
 - `disableQuote`: `true`にするとコロン後の引用検出を無効にする
 - `disableTable`: `true`にするとコロン後のテーブル検出を無効にする
 
+### no-ai-heading-numbers
+
+AIが機械的に生成しがちな、見出しに連番を含めるパターンを検出します。
+
+#### 検出される例
+
+```markdown
+# 1. タイトル
+## 2. セクション
+### 3.1. サブセクション
+#### 4) 項目
+```
+
+#### より自然な表現
+
+```markdown
+# タイトル
+## セクション
+### サブセクション
+#### 項目
+```
+
+#### オプション
+
+- `allows`: 指定したパターンにマッチする場合、エラーを報告しません
+    - 文字列: `"許可したいテキスト"`
+    - 正規表現: `"/パターン/フラグ"` (例: `"/\\d+\\. .*/i"`)
+
 ### ai-tech-writing-guideline
 
 テクニカルライティングのベストプラクティスに基づいて、文書品質の改善提案を行います。
@@ -334,6 +362,9 @@ command
                 "disableList": false,
                 "disableQuote": false,
                 "disableTable": false
+            },
+            "no-ai-heading-numbers": {
+                "allows": ["許可したいテキスト", "/正規表現パターン/"]
             },
             "ai-tech-writing-guideline": {
                 "severity": "info", // サジェストとして扱う
