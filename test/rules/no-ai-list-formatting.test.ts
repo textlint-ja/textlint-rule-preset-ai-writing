@@ -56,7 +56,10 @@ tester.run("no-ai-list-formatting", noAiListFormatting, {
         "- 🍎 りんご",
         "- 🐱 猫",
         "- 🌸 桜",
-        "- ❤️ ハート"
+        "- ❤️ ハート",
+        // Normal ordered list items (no bold+colon pattern)
+        "1. 通常の番号付きリストアイテム",
+        "2. これは問題ない記述です"
     ],
     invalid: [
         // Bold list item pattern
@@ -173,6 +176,39 @@ tester.run("no-ai-list-formatting", noAiListFormatting, {
                     message:
                         "リストアイテムでの絵文字「📝」の使用は、読み手によっては機械的な印象を与える場合があります。テキストベースの表現も検討してみてください。",
                     range: [2, 4]
+                }
+            ]
+        },
+        // Ordered list with bold+colon pattern (dot separator)
+        {
+            text: "1. **重要**: これは重要な項目です",
+            errors: [
+                {
+                    message:
+                        "リストアイテムで強調（**）とコロン（:）の組み合わせは機械的な印象を与える可能性があります。より自然な表現を検討してください。",
+                    range: [0, 10]
+                }
+            ]
+        },
+        // Ordered list with bold+colon pattern (parenthesis separator)
+        {
+            text: "2) **注意**: 注意が必要な項目です",
+            errors: [
+                {
+                    message:
+                        "リストアイテムで強調（**）とコロン（:）の組み合わせは機械的な印象を与える可能性があります。より自然な表現を検討してください。",
+                    range: [0, 10]
+                }
+            ]
+        },
+        // Ordered list with bold+full-width colon pattern
+        {
+            text: "1. **重要情報**：これは重要な項目です",
+            errors: [
+                {
+                    message:
+                        "リストアイテムで強調（**）とコロン（：）の組み合わせは機械的な印象を与える可能性があります。より自然な表現を検討してください。",
+                    range: [0, 12]
                 }
             ]
         },
