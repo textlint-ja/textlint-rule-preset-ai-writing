@@ -9,4 +9,4 @@
 ## New Contributors
 * @sai-kaneko-31 made their first contribution in https://github.com/textlint-ja/textlint-rule-preset-ai-writing/pull/33
 
-**Full Changelog**: https://github.com/textlint-ja/textlint-rule-preset-ai-writing/compare/v1.6.1...v1.6.2
+**Full Changelog**: https://github.com/textlint-ja/textlint-rule-preset-ai-writing/compare/v1.6.1...v1.6.3
