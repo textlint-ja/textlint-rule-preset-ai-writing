@@ -2,11 +2,11 @@
 
 ## What's Changed
 ### Bug Fixes
-* feat: 全角コロンで区切られるパターンを検知する by @Omochice in https://github.com/textlint-ja/textlint-rule-preset-ai-writing/pull/26
-### CI
-* CI: OICD release by @azu in https://github.com/textlint-ja/textlint-rule-preset-ai-writing/pull/27
+* feat: 番号付きリスト内の太字+コロンパターンを検知する by @sai-kaneko-31 in https://github.com/textlint-ja/textlint-rule-preset-ai-writing/pull/33
+### Documentation
+* feat: GitHub Pagesで動作するtextlintプレビューサイトを追加 by @azu in https://github.com/textlint-ja/textlint-rule-preset-ai-writing/pull/30
 
 ## New Contributors
-* @Omochice made their first contribution in https://github.com/textlint-ja/textlint-rule-preset-ai-writing/pull/26
+* @sai-kaneko-31 made their first contribution in https://github.com/textlint-ja/textlint-rule-preset-ai-writing/pull/33
 
-**Full Changelog**: https://github.com/textlint-ja/textlint-rule-preset-ai-writing/compare/v1.6.0...v1.6.1
+**Full Changelog**: https://github.com/textlint-ja/textlint-rule-preset-ai-writing/compare/v1.6.1...v1.6.2
