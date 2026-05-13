@@ -59,7 +59,11 @@ tester.run("no-ai-list-formatting", noAiListFormatting, {
         "- ❤️ ハート",
         // Normal ordered list items (no bold+colon pattern)
         "1. 通常の番号付きリストアイテム",
-        "2. これは問題ない記述です"
+        "2. これは問題ない記述です",
+        // Bold without separator should not trigger
+        "- **重要な項目**です",
+        // Bold + hyphen without surrounding spaces should not trigger (too ambiguous)
+        "- **重要**-説明"
     ],
     invalid: [
         // Bold list item pattern
@@ -219,6 +223,50 @@ tester.run("no-ai-list-formatting", noAiListFormatting, {
                 {
                     message:
                         "リストアイテムで強調（**）とコロン（：）の組み合わせは機械的な印象を与える可能性があります。より自然な表現を検討してください。",
+                    range: [0, 11]
+                }
+            ]
+        },
+        // Bold + hyphen pattern
+        {
+            text: "- **重要** - これは重要な項目です",
+            errors: [
+                {
+                    message:
+                        "リストアイテムで強調（**）とハイフン（-）の組み合わせは機械的な印象を与える可能性があります。より自然な表現を検討してください。",
+                    range: [0, 10]
+                }
+            ]
+        },
+        // Bold + em dash pattern
+        {
+            text: "- **重要** — これは重要な項目です",
+            errors: [
+                {
+                    message:
+                        "リストアイテムで強調（**）とダッシュ（—）の組み合わせは機械的な印象を与える可能性があります。より自然な表現を検討してください。",
+                    range: [0, 10]
+                }
+            ]
+        },
+        // Bold + en dash pattern
+        {
+            text: "- **重要** – これは重要な項目です",
+            errors: [
+                {
+                    message:
+                        "リストアイテムで強調（**）とダッシュ（–）の組み合わせは機械的な印象を与える可能性があります。より自然な表現を検討してください。",
+                    range: [0, 10]
+                }
+            ]
+        },
+        // Ordered list with bold+hyphen pattern
+        {
+            text: "1. **重要** - これは重要な項目です",
+            errors: [
+                {
+                    message:
+                        "リストアイテムで強調（**）とハイフン（-）の組み合わせは機械的な印象を与える可能性があります。より自然な表現を検討してください。",
                     range: [0, 11]
                 }
             ]
