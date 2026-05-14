@@ -1,6 +1,7 @@
 import aiTechWritingGuideline from "./rules/ai-tech-writing-guideline";
 import noAiColonContinuation from "./rules/no-ai-colon-continuation";
 import noAiEmphasisPatterns from "./rules/no-ai-emphasis-patterns";
+import noAiHeadingNumbers from "./rules/no-ai-heading-numbers";
 import noAiHypeExpressions from "./rules/no-ai-hype-expressions";
 import noAiListFormatting from "./rules/no-ai-list-formatting";
 
@@ -10,7 +11,8 @@ const preset = {
         "no-ai-hype-expressions": noAiHypeExpressions,
         "no-ai-emphasis-patterns": noAiEmphasisPatterns,
         "ai-tech-writing-guideline": aiTechWritingGuideline,
-        "no-ai-colon-continuation": noAiColonContinuation
+        "no-ai-colon-continuation": noAiColonContinuation,
+        "no-ai-heading-numbers": noAiHeadingNumbers
     },
     rulesConfig: {
         "no-ai-list-formatting": true,
@@ -19,7 +21,8 @@ const preset = {
         "ai-tech-writing-guideline": {
             severity: "info"
         },
-        "no-ai-colon-continuation": true
+        "no-ai-colon-continuation": true,
+        "no-ai-heading-numbers": true
     }
 };
 
