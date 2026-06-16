@@ -63,7 +63,18 @@ tester.run("no-ai-list-formatting", noAiListFormatting, {
         // Bold without separator should not trigger
         "- **重要な項目**です",
         // Bold + hyphen without surrounding spaces should not trigger (too ambiguous)
-        "- **重要**-説明"
+        "- **重要**-説明",
+        // Bold lead-in followed by copula (not a 主語/目的語 particle) should not trigger
+        "- **設定ファイル**である",
+        // Bold lead-in with a term followed by な (用語の強調) should not trigger
+        "- **Rejected**なPromiseを返す",
+        // Bold lead-in disabled via option
+        {
+            text: "- **内部変数**は推論に任せる",
+            options: {
+                disableBoldListItems: true
+            }
+        }
     ],
     invalid: [
         // Bold list item pattern
@@ -268,6 +279,25 @@ tester.run("no-ai-list-formatting", noAiListFormatting, {
                     message:
                         "リストアイテムで強調（**）とハイフン（-）の組み合わせは機械的な印象を与える可能性があります。より自然な表現を検討してください。",
                     range: [0, 11]
+                }
+            ]
+        },
+        // Bold lead-in term followed by 主語/目的語 particle and an explanation (AIにありがちな構造)
+        {
+            text: "- **内部変数**は推論に任せる",
+            errors: [
+                {
+                    message:
+                        "リストアイテムの先頭を強調（**）で始める形式は、項目を機械的に列挙した印象を与える可能性があります。文章として説明することを検討してください。"
+                }
+            ]
+        },
+        {
+            text: "- **表示する状態**を先に名前づける",
+            errors: [
+                {
+                    message:
+                        "リストアイテムの先頭を強調（**）で始める形式は、項目を機械的に列挙した印象を与える可能性があります。文章として説明することを検討してください。"
                 }
             ]
         }

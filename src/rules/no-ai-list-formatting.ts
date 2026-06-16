@@ -101,6 +101,27 @@ const rule: TextlintRuleModule<Options> = (context: TextlintRuleContext, options
                         }
                     );
                     report(node, ruleError);
+                } else {
+                    // 区切り文字を使わず、太字の見出し語に主語・目的語の助詞（は/が/を）が続き、
+                    // さらに説明文が続くパターン:
+                    // - **内部変数**は推論に任せる / - **表示する状態**を先に名前づける
+                    // 各項目の先頭語を機械的に太字化する、AI生成文章にありがちな構造。
+                    // 「**重要な項目**です」のような語の強調や、「**Rejected**な〜」のような
+                    // 用語の強調は対象外にするため、助詞を限定し、後続に2文字以上の説明を要求する。
+                    const boldLeadPattern = /^[\s]*(?:[-*+]|\d+[.)])\s+\*\*([^*]+)\*\*([はがを])(?=.{2,})/;
+                    const leadMatch: RegExpMatchArray | null = text.match(boldLeadPattern);
+                    if (leadMatch) {
+                        const matchStart: number = leadMatch.index ?? 0;
+                        const matchEnd = matchStart + leadMatch[0].length;
+                        const matchRange = [matchStart, matchEnd] as const;
+                        const ruleError = new RuleError(
+                            "リストアイテムの先頭を強調（**）で始める形式は、項目を機械的に列挙した印象を与える可能性があります。文章として説明することを検討してください。",
+                            {
+                                padding: locator.range(matchRange)
+                            }
+                        );
+                        report(node, ruleError);
+                    }
                 }
             }
 
