@@ -81,6 +81,8 @@ MCPサーバの詳しい設定方法は [textlint MCP documentation](https://tex
 - **注意**: 注意が必要な項目です
 - **項目** - ハイフン区切りも同様のパターンです
 - **項目** — em ダッシュ区切りも検出します
+- **内部変数**は推論に任せる
+- **表示する状態**を先に名前づける
 - ✅ 完了した項目
 - ❌ 失敗した項目
 - 💡 アイデア項目
@@ -97,6 +99,8 @@ MCPサーバの詳しい設定方法は [textlint MCP documentation](https://tex
 - 重要な項目: これは重要な項目です
 - 注意事項: 注意が必要な項目です
 - 区切り記号を使わずに項目を説明する
+- 内部変数は推論に任せる
+- 表示する状態を先に名前づける
 - 完了した項目
 - 失敗した項目
 - アイデア項目
@@ -112,7 +116,7 @@ MCPサーバの詳しい設定方法は [textlint MCP documentation](https://tex
 - `allows`: 指定したパターンにマッチする場合、エラーを報告しません
     - 文字列: `"許可したいテキスト"`
     - 正規表現: `"/パターン/フラグ"` (例: `"/重要.*/i"`)
-- `disableBoldListItems`: `true`にすると強調リストアイテムの検出を無効にする
+- `disableBoldListItems`: `true`にすると強調リストアイテムの検出を無効にする（区切り文字付きと、`- **語**は…` のように先頭語を太字化する形式の両方を含む）
 - `disableEmojiListItems`: `true`にすると絵文字リストアイテムの検出を無効にする
 
 ### no-ai-hype-expressions
@@ -201,6 +205,41 @@ AIが機械的に生成しがちな強調パターンを検出します。
 - `disableInfoPatterns`: `true`にすると情報系プレフィックスパターンの検出を無効にする
 - `disableHeadingEmphasisPatterns`: `true`にすると見出し内の太字パターンの検出を無効にする
 
+### no-ai-empty-phrases
+
+中身のない定型句や、内容を説明しない空虚な動詞を検出します。AIが生成した文章では、体裁を整えるだけで具体的な情報を持たない決まり文句が現れやすくなります。
+
+検出は次の3カテゴリに分かれます。
+
+- 空虚な定型句: `多角的に` や `掘り下げる` など、観点や内容を示さない決まり文句
+- 機械的な結論段落: `いかがでしたか` や `ぜひ試してみてください` など、技術的な内容を持たない締めの定型句
+- 過剰な前置き構造: `本記事では〜解説していきます` など、本題の前に置かれる内容のない案内文
+
+#### 検出される例
+
+```markdown
+この問題を多角的に掘り下げて解説します。
+本記事ではDockerについて解説していきます。
+いかがでしたか。ぜひ試してみてください。
+```
+
+#### より自然な表現
+
+```markdown
+この問題を、性能とコストの観点から検討します。
+Dockerのコンテナ管理の仕組みを説明します。
+ここまでの手順で開発環境が起動します。次はテストを追加してみましょう。
+```
+
+#### オプション
+
+- `allows`: 指定したパターンにマッチする場合、エラーを報告しません
+    - 文字列: `"許可したいテキスト"`
+    - 正規表現: `"/パターン/フラグ"`
+- `disableFillerPatterns`: `true`にすると空虚な定型句の検出を無効にする
+- `disableConclusionPatterns`: `true`にすると機械的な結論段落の検出を無効にする
+- `disableIntroductionPatterns`: `true`にすると過剰な前置き構造の検出を無効にする
+
 ### no-ai-colon-continuation
 
 コロンの直後にブロック要素が続く英語的なパターンを検出します。日本語として自然な表現を促進するルールです。
@@ -263,6 +302,20 @@ command
 
 テクニカルライティングのベストプラクティスに基づいて、文書品質の改善提案を行います。
 詳細なガイドラインについては [docs/tech-writing-guidelines.md](./docs/tech-writing-guidelines.md) を参照してください。
+
+このルールは表現（冗長表現や受動態など）に踏み込む性質があり、人間が書いた技術文書でも提案が多く出ます。AIらしさの検出というより文章品質の改善ガイドであるため、**デフォルトでは無効**です。利用する場合は次の設定で明示的に有効化してください。
+
+```json
+{
+    "rules": {
+        "@textlint-ja/preset-ai-writing": {
+            "ai-tech-writing-guideline": {
+                "severity": "info"
+            }
+        }
+    }
+}
+```
 
 #### 検出される内容
 
@@ -331,6 +384,12 @@ command
                 "disableInfoPatterns": false,
                 "disableHeadingEmphasisPatterns": false
             },
+            "no-ai-empty-phrases": {
+                "allows": ["許可したいテキスト", "/正規表現パターン/"],
+                "disableFillerPatterns": false,
+                "disableConclusionPatterns": false,
+                "disableIntroductionPatterns": false
+            },
             "no-ai-colon-continuation": {
                 "allows": ["許可したいテキスト", "/正規表現パターン/"],
                 "disableCodeBlock": false,
@@ -339,6 +398,7 @@ command
                 "disableTable": false
             },
             "ai-tech-writing-guideline": {
+                // デフォルトでは無効。利用する場合は明示的に設定する
                 "severity": "info", // サジェストとして扱う
                 "allows": ["許可したいテキスト", "/正規表現パターン/"],
                 "disableRedundancyGuidance": false,

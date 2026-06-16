@@ -32,6 +32,7 @@
     ],
     "scripts": {
         "build": "textlint-scripts build",
+        "corpus-check": "ts-node scripts/corpus-check.ts",
         "format": "biome check --write ./",
         "lint": "biome check ./",
         "prepare": "git config --local core.hooksPath .githooks",
@@ -55,6 +56,8 @@
     },
     "devDependencies": {
         "@biomejs/biome": "^2.0.6",
+        "@textlint/kernel": "^14.8.4",
+        "@textlint/textlint-plugin-markdown": "^14.8.4",
         "@textlint/types": "^14.8.4",
         "@types/node": "^24.0.1",
         "husky": "^9.1.7",
