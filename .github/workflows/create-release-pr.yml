@@ -15,65 +15,111 @@ on:
 jobs:
   create-release-pr:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: write
       pull-requests: write
     steps:
       - name: Checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
-          fetch-depth: 0
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@3235b876344d2a9aa001b8d1453c930bba69e610 # v3.9.1
-        with:
-          node-version: 22
+          persist-credentials: false
       
       - name: Configure Git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
       
+      - name: Setup Node.js
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+        with:
+          node-version: 'lts/*'
+      
+      # No need to install dependencies - npm version works without them
       - name: Version bump
+        id: version
         run: |
-          npm version ${{ github.event.inputs.version }} --no-git-tag-version
-          VERSION=$(node -p "require('./package.json').version")
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          npm version "$VERSION_TYPE" --no-git-tag-version
+          VERSION=$(jq -r '.version' package.json)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+        env:
+          VERSION_TYPE: ${{ github.event.inputs.version }}
       
       - name: Get release notes
         id: release-notes
         run: |
           # Get the default branch
-          DEFAULT_BRANCH=$(gh api repos/${{ github.repository }} --jq '.default_branch')
+          DEFAULT_BRANCH=$(gh api "repos/$GITHUB_REPOSITORY" --jq '.default_branch')
           
-          # Get the last tag
-          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
-          if [ -z "$LAST_TAG" ]; then
-            LAST_TAG=$(git rev-list --max-parents=0 HEAD)
+          # Get the latest release tag using GitHub API
+          # Use the exit code to determine if a release exists
+          if LAST_TAG=$(gh api "repos/$GITHUB_REPOSITORY/releases/latest" --jq '.tag_name' 2>/dev/null); then
+            echo "Previous release found: $LAST_TAG"
+          else
+            LAST_TAG=""
+            echo "No previous releases found - this will be the first release"
           fi
           
-          # Generate release notes
-          NOTES=$(gh api \
-            --method POST \
-            -H "Accept: application/vnd.github+json" \
-            /repos/${{ github.repository }}/releases/generate-notes \
-            -f tag_name="v${{ env.VERSION }}" \
-            -f target_commitish="$DEFAULT_BRANCH" \
-            -f previous_tag_name="${LAST_TAG}" | jq -r '.body')
+          # Generate release notes - only include previous_tag_name if we have a valid previous tag
+          echo "Generating release notes for tag: v$VERSION"
+          if [ -n "$LAST_TAG" ]; then
+            echo "Using previous tag: $LAST_TAG"
+            RELEASE_NOTES=$(gh api \
+              --method POST \
+              -H "Accept: application/vnd.github+json" \
+              "/repos/$GITHUB_REPOSITORY/releases/generate-notes" \
+              -f "tag_name=v$VERSION" \
+              -f "target_commitish=$DEFAULT_BRANCH" \
+              -f "previous_tag_name=$LAST_TAG" \
+              --jq '.body')
+          else
+            echo "Generating notes from all commits"
+            RELEASE_NOTES=$(gh api \
+              --method POST \
+              -H "Accept: application/vnd.github+json" \
+              "/repos/$GITHUB_REPOSITORY/releases/generate-notes" \
+              -f "tag_name=v$VERSION" \
+              -f "target_commitish=$DEFAULT_BRANCH" \
+              --jq '.body')
+          fi
           
-          # Save to file to handle multiline content
-          echo "$NOTES" > release-notes.md
+          # Set release notes as environment variable
+          {
+            echo "RELEASE_NOTES<<EOF"
+            echo "$RELEASE_NOTES"
+            echo "EOF"
+          } >> "$GITHUB_ENV"
         env:
           GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+
+      - name: Commit version bump
+        run: |
+          git add .
+          git commit -m "chore: release v$VERSION"
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        
+      - name: Push branch
+        run: |
+          git push -u "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "HEAD:release/v$VERSION"
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
       
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@153407881ec5c347639a548ade7d8ad1d6740e38 # v5.0.2
-        with:
-          branch: release/v${{ env.VERSION }}
-          delete-branch: true
-          title: "Release v${{ env.VERSION }}"
-          body-path: release-notes.md
-          commit-message: "chore: release v${{ env.VERSION }}"
-          labels: |
-            Type: Release
-          assignees: ${{ github.actor }}
+        run: |
+          echo "$RELEASE_NOTES" | gh pr create \
+            --title "Release v$VERSION" \
+            --body-file - \
+            --base "$BASE_BRANCH" \
+            --head "release/v$VERSION" \
+            --label "Type: Release" \
+            --assignee "$ACTOR"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+          BASE_BRANCH: ${{ github.ref_name }}
+          ACTOR: ${{ github.actor }}
