@@ -56,6 +56,9 @@ jobs:
         env:
           VERSION: ${{ steps.package.outputs.version }}
 
+      - name: Setup pnpm
+        if: steps.tag-check.outputs.exists == 'false'
+        uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
 
       - name: Setup Node.js
         if: steps.tag-check.outputs.exists == 'false'
@@ -69,12 +72,12 @@ jobs:
 
       - name: Install dependencies
         if: steps.tag-check.outputs.exists == 'false'
-        run: npm ci --ignore-scripts
+        run: pnpm install --frozen-lockfile --ignore-scripts
 
       # npm 7+ does not run `prepublish` on publish, so build lib/ explicitly
       - name: Build
         if: steps.tag-check.outputs.exists == 'false'
-        run: npm run build
+        run: pnpm run build
 
       # Stage the package on npm. A maintainer approves it with 2FA to publish it.
       # https://docs.npmjs.com/staged-publishing

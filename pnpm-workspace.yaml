@@ -1,0 +1,3 @@
+overrides:
+  '@textlint/ast-node-types': ^16.1.2
+  textlint-util-to-string: 3.3.4
