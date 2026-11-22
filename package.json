@@ -73,7 +73,7 @@
     "dependencies": {
         "@textlint/regexp-string-matcher": "^2.0.2",
         "kuromojin": "^3.1.0",
-        "textlint-util-to-string": "^3.3.4"
+        "textlint-util-to-string": "^3.3.6"
     },
     "packageManager": "pnpm@12.21.0"
 }

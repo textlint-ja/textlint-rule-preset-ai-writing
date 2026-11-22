@@ -173,7 +173,6 @@ settings:
 
 overrides:
   '@textlint/ast-node-types': ^16.1.2
-  textlint-util-to-string: 3.3.4
 
 importers:
 
@@ -186,8 +185,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0
       textlint-util-to-string:
-        specifier: 3.3.4
-        version: 3.3.4
+        specifier: ^3.3.6
+        version: 3.3.6
     devDependencies:
       '@biomejs/biome':
         specifier: ^2.0.6
@@ -2530,8 +2529,8 @@ packages:
   textlint-tester@16.1.2:
     resolution: {integrity: sha512-bZ2iYhmd31O8lqxYQjePNEBosVdqWqpPgbqJsihNR/5uWvboMH5CUSvnbCUQI1bRqT+2bonPxGeFALr1MzQxow==}
 
-  textlint-util-to-string@3.3.4:
-    resolution: {integrity: sha512-XF4Qfw0ES+czKy03BwuvBUoXC8NAg920VuRxW0pd72fW76zMeMbPI/bRN5PHq3SbCdOm7U69/Pk+DX34xqIYqA==}
+  textlint-util-to-string@3.3.6:
+    resolution: {integrity: sha512-RAv7PRb9VEHq9m4aNFHAjHLXbPLeLQF0EZ1MtuDknAOXUTLO+N7if0uhYZjFlY86N9stPNulgp+Qw36Umb5VRw==}
 
   textlint@14.8.4:
     resolution: {integrity: sha512-oV7DwKjdbIk+5LlAhtTtWsudzNdUnEpP2KW2iIRnjdZ0uM/vXhffDh66UL6P3nk7Io37qhSRb3E82fdVHqyblw==}
@@ -5376,7 +5375,7 @@ snapshots:
       kuromojin: 3.1.0
       sentence-splitter: 5.1.0
       textlint-rule-helper: 2.6.0
-      textlint-util-to-string: 3.3.4
+      textlint-util-to-string: 3.3.6
 
   textlint-rule-no-double-negative-ja@2.0.1:
     dependencies:
@@ -5393,14 +5392,14 @@ snapshots:
       kuromojin: 3.1.0
       sentence-splitter: 5.1.0
       textlint-rule-helper: 2.6.0
-      textlint-util-to-string: 3.3.4
+      textlint-util-to-string: 3.3.6
 
   textlint-rule-no-doubled-joshi@5.1.1:
     dependencies:
       kuromojin: 3.1.0
       sentence-splitter: 5.1.0
       textlint-rule-helper: 2.6.0
-      textlint-util-to-string: 3.3.4
+      textlint-util-to-string: 3.3.6
 
   textlint-rule-no-dropping-the-ra@3.0.0:
     dependencies:
@@ -5444,7 +5443,7 @@ snapshots:
       '@textlint/regexp-string-matcher': 2.0.4
       sentence-splitter: 5.1.0
       textlint-rule-helper: 2.6.0
-      textlint-util-to-string: 3.3.4
+      textlint-util-to-string: 3.3.6
 
   textlint-scripts@16.1.2(supports-color@8.1.1)(ts-node@10.9.2(@types/node@24.19.2)(typescript@5.9.3))(typescript@5.9.3):
     dependencies:
@@ -5475,7 +5474,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  textlint-util-to-string@3.3.4:
+  textlint-util-to-string@3.3.6:
     dependencies:
       '@textlint/ast-node-types': 16.1.2
       rehype-parse: 6.0.2
