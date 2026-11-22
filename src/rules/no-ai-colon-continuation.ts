@@ -156,7 +156,7 @@ const rule: TextlintRuleModule<Options> = (context: TextlintRuleContext, options
     };
 
     return {
-        async [Syntax.Document](node: AnyTxtNode & { children: AnyTxtNode[] }) {
+        async [Syntax.Document](node) {
             // ドキュメントの子ノードを順番にチェック
             for (const [i, currentNode] of node.children.entries()) {
                 const nextNode = node.children[i + 1];

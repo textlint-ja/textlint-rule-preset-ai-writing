@@ -1,0 +1,4 @@
+overrides:
+  '@textlint/ast-node-types': ^16.1.2
+minimumReleaseAgeExclude:
+  - textlint-util-to-string@3.3.6
