@@ -65,9 +65,12 @@ tester.run("no-ai-list-formatting", noAiListFormatting, {
         // Bold + hyphen without surrounding spaces should not trigger (too ambiguous)
         "- **重要**-説明",
         // Nested list under a bold-only item should not trigger on the parent
-        "- **サービス名**\n  - 関連するユーザーストーリー: ...",
-        "- **親**\n  - 子",
-        "- **親**\n  : 定義"
+        `- **サービス名**
+  - 関連するユーザーストーリー: ...`,
+        `- **親**
+  - 子`,
+        `- **親**
+  : 定義`
     ],
     invalid: [
         // Bold list item pattern
@@ -277,7 +280,8 @@ tester.run("no-ai-list-formatting", noAiListFormatting, {
         },
         // Nested child item with bold+hyphen: only the child item is reported
         {
-            text: "- **親**\n  - **子** - 説明",
+            text: `- **親**
+  - **子** - 説明`,
             errors: [
                 {
                     message:
