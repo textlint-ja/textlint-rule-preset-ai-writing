@@ -63,7 +63,11 @@ tester.run("no-ai-list-formatting", noAiListFormatting, {
         // Bold without separator should not trigger
         "- **重要な項目**です",
         // Bold + hyphen without surrounding spaces should not trigger (too ambiguous)
-        "- **重要**-説明"
+        "- **重要**-説明",
+        // Nested list under a bold-only item should not trigger on the parent
+        "- **サービス名**\n  - 関連するユーザーストーリー: ...",
+        "- **親**\n  - 子",
+        "- **親**\n  : 定義"
     ],
     invalid: [
         // Bold list item pattern
@@ -268,6 +272,18 @@ tester.run("no-ai-list-formatting", noAiListFormatting, {
                     message:
                         "リストアイテムで強調（**）とハイフン（-）の組み合わせは機械的な印象を与える可能性があります。より自然な表現を検討してください。",
                     range: [0, 11]
+                }
+            ]
+        },
+        // Nested child item with bold+hyphen: only the child item is reported
+        {
+            text: "- **親**\n  - **子** - 説明",
+            errors: [
+                {
+                    message:
+                        "リストアイテムで強調（**）とハイフン（-）の組み合わせは機械的な印象を与える可能性があります。より自然な表現を検討してください。",
+                    line: 2,
+                    column: 3
                 }
             ]
         }
