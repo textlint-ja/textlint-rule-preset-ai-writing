@@ -79,7 +79,8 @@ const rule: TextlintRuleModule<Options> = (context: TextlintRuleContext, options
 
             // Check for bold list item pattern: - **text**: description or - **text** - description
             if (!disableBoldListItems) {
-                const boldListPattern = /^[\s]*(?:[-*+]|\d+[.)])\s+\*\*([^*]+)\*\*(?:\s*([:：])|\s+([-—–])(?=\s))/;
+                const boldListPattern =
+                    /^[\s]*(?:[-*+]|\d+[.)])\s+\*\*([^*]+)\*\*(?:[ \t]*([:：])|[ \t]+([-—–])(?=\s))/;
                 const boldMatch: RegExpMatchArray | null = text.match(boldListPattern);
                 if (boldMatch) {
                     const matchStart: number = boldMatch.index ?? 0;
